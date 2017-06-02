@@ -43,23 +43,24 @@ public class MainScene extends GVRScene {
         getEventReceiver().addListener(mPickHandler);
         mPicker = new GVRPicker(gContext, this);
 
-        GVRSceneObject gray = createBase("gray",168, 168, 168);
+        GVRSceneObject gray = createBase("gray",171, 171, 171);
         gray.getTransform().setPosition(-2.5f,0.75f,-5);
-        GVRSceneObject yellow = createBase("yellow",251, 251, 2);
-        yellow.getTransform().setPosition(-0.75f,0.75f,-5);
-        GVRSceneObject blue = createBase("blue",0, 0, 168);
-        blue.getTransform().setPosition(0.75f,0.75f,-5);
-        GVRSceneObject brown = createBase("brown",169, 84, 3);
-        brown.getTransform().setPosition(2.5f,0.75f,-5);
+        GVRSceneObject blue = createBase("blue",51, 0, 168);
+        blue.getTransform().setPosition(-0.75f,0.75f,-5);
+        GVRSceneObject brown = createBase("brown",144, 88, 9);
+        brown.getTransform().setPosition(0.75f,0.75f,-5);
+        GVRSceneObject green = createBase("green",3, 114, 21);
+        green.getTransform().setPosition(2.5f,0.75f,-5);
 
-        GVRSceneObject green = createBase("green",168, 0, 0);
-        green.getTransform().setPosition(-2.5f,-0.75f,-5);
-        GVRSceneObject red = createBase("red",246, 1, 0);
-        red.getTransform().setPosition(-0.75f,-0.75f,-5);
-        GVRSceneObject purple = createBase("purple",168, 0, 87);
-        purple.getTransform().setPosition(0.75f,-0.75f,-5);
+        GVRSceneObject red = createBase("red",246, 6, 22);
+        red.getTransform().setPosition(-2.5f,-0.75f,-5);
         GVRSceneObject black = createBase("black",0, 0, 0);
-        black.getTransform().setPosition(2.5f,-0.75f,-5);
+        black.getTransform().setPosition(-0.75f,-0.75f,-5);
+        GVRSceneObject yellow = createBase("yellow",251, 251, 2);
+        yellow.getTransform().setPosition(0.75f,-0.75f,-5);
+        GVRSceneObject purple = createBase("purple",168, 0, 59);
+        purple.getTransform().setPosition(2.5f,-0.75f,-5);
+
     }
 
     public void onTouchEvent() {
