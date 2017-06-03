@@ -2,6 +2,7 @@ package com.ongoza.pcycolortest;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.view.Gravity;
 
 import org.gearvrf.GVRAndroidResource;
 import org.gearvrf.GVRContext;
@@ -113,13 +114,15 @@ public class MainScene extends GVRScene {
     }
 
     private void showMsg(String str){
-            int textClr = Color.rgb(200, 200, 200);
-            int bckClr = Color.rgb(20, 20, 120);
+            int textClr = Color.rgb(51, 55, 64);
+            int bckClr = Color.rgb(240, 240, 240);
 
-            GVRTextViewSceneObject itemName = new GVRTextViewSceneObject(gContext, 4, 0.7f, str);
-            itemName.setName("iMsg");
-            itemName.setTextColor(textClr);
-            itemName.setBackgroundColor(bckClr);
+            GVRTextViewSceneObject item = new GVRTextViewSceneObject(gContext, 6, 1, str);
+            item.setName("iMsg");
+            item.setTextColor(textClr);
+            item.setGravity(Gravity.CENTER);
+            item.setTextSize(7);
+            item.setBackgroundColor(bckClr);
 
 //            GVRTextViewSceneObject itemDesc = new GVRTextViewSceneObject(gContext, 4, 1, data[2]);
 //            itemDesc.setTextSize(4);
@@ -158,15 +161,15 @@ public class MainScene extends GVRScene {
 //            itemVideo.setTag(arrEdit);
 //            itemEdit.attachCollider(new GVRSphereCollider(gContext));
 //            itemName.addChildObject(itemEdit);
-            curSelection = itemName;
-            itemName.getTransform().setPosition(0, 0, -4);
+            curSelection = item;
+            item.getTransform().setPosition(0, 0, -5);
 //            itemName.getTransform().rotateByAxis(-90f, 0f, 1f, 0f);
-            addSceneObject(itemName);
+            addSceneObject(item);
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override  public void run() {
                 animateDelete();
-                }}, 1000);
+                }}, 5000);
 
     }
 
