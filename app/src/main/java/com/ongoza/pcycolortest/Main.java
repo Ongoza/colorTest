@@ -1,6 +1,7 @@
 package com.ongoza.pcycolortest;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.MotionEvent;
 import org.gearvrf.GVRContext;
 import org.gearvrf.GVRMain;
@@ -16,7 +17,8 @@ import org.gearvrf.scene_objects.GVRVideoSceneObject;
 public class Main extends GVRMain {
     private static final String TAG = "VRPTest";
     private GVRContext gContext;
-    public Context mContext;
+    public static Context mContext;
+    private Resources resources;
     private static MainScene  mainScene;
 
     @Override public void onInit(GVRContext gvrContext) throws Throwable {
