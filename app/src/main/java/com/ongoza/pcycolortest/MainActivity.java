@@ -17,9 +17,9 @@ public class MainActivity extends GVRActivity {
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        main = new Main();
+        main = new Main(this);
         setMain(main, "gvr.xml");
-        main.mContext = this;
+//        main.mContext = this;
     }
 
     @Override public boolean onTouchEvent(MotionEvent event) {

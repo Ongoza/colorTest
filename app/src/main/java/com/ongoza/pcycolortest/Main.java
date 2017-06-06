@@ -21,6 +21,8 @@ public class Main extends GVRMain {
     private Resources resources;
     private static MainScene  mainScene;
 
+    public Main(MainActivity activity) {  mContext = activity;  }
+
     @Override public void onInit(GVRContext gvrContext) throws Throwable {
         this.gContext = gvrContext;
         mainScene = new MainScene(gContext, mContext);

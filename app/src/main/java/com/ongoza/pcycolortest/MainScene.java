@@ -51,6 +51,7 @@ public class MainScene extends GVRScene {
     private GVRSceneObject curColorObj;
     private String[] arrNames = {"gray","blue","brown","green","red","black","yellow","purple" };
 
+//
 
     public MainScene(GVRContext gContext, Context mContext) {
         super(gContext);
