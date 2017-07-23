@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 
+System.setProperty("appName", "Pchy color test")
+
 allprojects {
     repositories {
         jcenter()
@@ -17,10 +19,12 @@ android {
     }
     buildTypes {
         debug {
+            resValue 'string', 'app_name', System.getProperty("appName")
             debuggable true
         }
         release {
             minifyEnabled true
+            resValue 'string', 'app_name', System.getProperty("appName")
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -44,12 +48,13 @@ android {
 
 dependencies {
     compile 'org.gearvrf:framework:3.1.1'
+    compile 'org.gearvrf:backend_oculus:3.1.0'
 //    compile 'org.gearvrf:3DCursorLibrary:3.1.1'
 //    compile 'org.gearvrf:gearwearlibrary:3.1.1'
 //    compile 'org.gearvrf:GearWearIoDevice:3.1.1'
     compile 'com.google.vr:sdk-base:1.60.0'
     compile 'org.gearvrf:backend_daydream:3.1.1'
-    compile 'com.google.protobuf.nano:protobuf-javanano:3.0.0-alpha-7'
+//    compile 'com.google.protobuf.nano:protobuf-javanano:3.0.0-alpha-7'
 
 
 }

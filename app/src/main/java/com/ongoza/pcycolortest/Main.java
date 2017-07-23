@@ -15,7 +15,7 @@ import org.gearvrf.scene_objects.GVRVideoSceneObject;
  */
 
 public class Main extends GVRMain {
-    private static final String TAG = "VRPTest";
+    private static final String TAG = "VRTest";
     private GVRContext gContext;
     public static Context mContext;
     private Resources resources;
@@ -30,6 +30,8 @@ public class Main extends GVRMain {
     }
 
     @Override public void onStep() {}
+
+    public static String getTAG(){ return TAG; }
 
     public void onTouchEvent(MotionEvent event) {
         switch (event.getAction() & MotionEvent.ACTION_MASK) {

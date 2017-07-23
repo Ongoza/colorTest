@@ -12,7 +12,7 @@ import org.gearvrf.utility.Log;
  */
 
 public class PickHandler implements IPickEvents {
-    private static final String TAG = "VRTest";
+    private static final String TAG = Main.getTAG();
     private String tutorialTag = "tMenu";
 //    private static final int IN_FOCUS_COLOR = 8570046;
     private static final int IN_FOCUS_COLOR = Color.rgb(10,220,220);
@@ -21,9 +21,10 @@ public class PickHandler implements IPickEvents {
     public GVRSceneObject PickedObject = null;
 
     public void onEnter(GVRSceneObject sceneObj, GVRPicker.GVRPickedObject pickInfo) {
-        Log.d(TAG,"focus="+String.valueOf(sceneObj.getTag()));
+//        Log.d(TAG,"focus="+String.valueOf(sceneObj.getName()));
 //        if(sceneObj.getTag().equals("")){
-        sceneObj.getTransform().translate(0,0.1f,0.2f);
+//        sceneObj.getTransform().translate(0,0.1f,0.2f);
+        sceneObj.getTransform().setScale(1.2f,1.2f,1.2f);
 //        }else{
 //            sceneObj.getRenderData().getMaterial().setColor(IN_FOCUS_COLOR);
 //        }
@@ -31,9 +32,9 @@ public class PickHandler implements IPickEvents {
     }
 
     public void onExit(GVRSceneObject sceneObj) {
-
+        sceneObj.getTransform().setScale(1f,1f,1f);
 //        if(sceneObj.getTag().equals(tutorialTag)){
-            sceneObj.getTransform().translate(0,-0.1f,-0.2f);
+//            sceneObj.getTransform().translate(0,-0.1f,-0.2f);
 //        }else{
 //            sceneObj.getRenderData().getMaterial().setColor(LOST_FOCUS_COLOR);
 //        }
