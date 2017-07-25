@@ -6,8 +6,15 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import org.gearvrf.GVRActivity;
+import org.gearvrf.GVRAndroidResource;
+import org.gearvrf.script.GVRScriptException;
+import org.gearvrf.script.GVRScriptFile;
+import org.gearvrf.script.GVRScriptManager;
+
+import java.io.IOException;
 
 public class MainActivity extends GVRActivity {
+
     private static final int BUTTON_INTERVAL = 500;
     private static final int TAP_INTERVAL = 300;
     private long mLatestButton = 0;
@@ -20,6 +27,7 @@ public class MainActivity extends GVRActivity {
         main = new Main(this);
         setMain(main, "gvr.xml");
 //        main.mContext = this;
+
     }
 
     @Override public boolean onTouchEvent(MotionEvent event) {

@@ -10,6 +10,11 @@ import org.gearvrf.GVRScene;
 import org.gearvrf.GVRSceneObject;
 import org.gearvrf.scene_objects.GVRTextViewSceneObject;
 import org.gearvrf.scene_objects.GVRVideoSceneObject;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+
 /**
  * Created by os on 6/1/17.
  */
@@ -19,24 +24,28 @@ public class Main extends GVRMain {
     private GVRContext gContext;
     public static Context mContext;
     private Resources resources;
-    private static MainScene  mainScene;
+    private static ColorTestScene  colorTestScene;
 
     public Main(MainActivity activity) {  mContext = activity;  }
 
     @Override public void onInit(GVRContext gvrContext) throws Throwable {
         this.gContext = gvrContext;
-        mainScene = new MainScene(gContext, mContext);
-        gContext.setMainScene(mainScene);
+        colorTestScene = new ColorTestScene(gContext, mContext, this );
+        gContext.setMainScene(colorTestScene);
     }
 
     @Override public void onStep() {}
+
+
+
+//    public String getMain(){ return this; }
 
     public static String getTAG(){ return TAG; }
 
     public void onTouchEvent(MotionEvent event) {
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
-                mainScene.onTouchEvent();
+                colorTestScene.onTouchEvent();
                 break;
             default:
                 break;

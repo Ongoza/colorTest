@@ -53,7 +53,7 @@ public class About extends GVRSceneObject{
     public void showAbout(){
         String name="AboutText";
         Log.d(TAG,"show about info");
-        String txt = "This application was developed by the www.ongoza.com";
+        String txt = "This application was developed by O.Skuibida & A.Sukhnin for the www.ongoza.com";
         GVRTextViewSceneObject item = new GVRTextViewSceneObject(gContext, 3.1f, 1f, txt);
         item.getTransform().setPosition(0.0f, - 2f, 0f);
         item.getTransform().rotateByAxis(-90, 1, 0, 0);
