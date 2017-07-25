@@ -81,6 +81,7 @@ public class ColorTestScene extends GVRScene {
             scriptManager.attachScriptFile(main, scriptFile);}
         catch (IOException | GVRScriptException e) { e.printStackTrace();}
         scriptManager.addVariable("test",new ScriptObj());
+        scriptManager.addVariable("utils", new ScriptUtils());
         this.main = main;
 //        scriptManager;
         scriptManager = getGVRContext().getScriptManager();
@@ -349,11 +350,12 @@ public class ColorTestScene extends GVRScene {
                 ff.setScriptText("utils.log(\" !!!!!!test script log: onSetScript\");", GVRScriptManager.LANG_JAVASCRIPT);
 //                ff.setScriptFile(, GVRScriptManager.LANG_JAVASCRIPT);
 //                scriptManager.addVariable("tst2", ff);
-                ff.onEnable();
-                ff.onStep();
-                ff.invoke();
-                ff.onPick(mPicker);
-                ff.enable();
+//                ff.onEnable();
+//                utils.log();
+//                ff.onStep();
+//                ff.invoke();
+//                ff.onPick(mPicker);
+//                ff.enable();
                 obj.attachComponent(ff);
             }catch (Exception e){Log.d(TAG,"Error add script");}
 //            obj.attachComponent(new GVRScriptBehavior(gContext,));
