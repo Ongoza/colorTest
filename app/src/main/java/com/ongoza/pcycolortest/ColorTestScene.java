@@ -67,7 +67,7 @@ public class ColorTestScene extends GVRScene {
     private GVRSceneObject curTaskText = null;
     private GVRSceneObject curSelection = null;
     private GVRSceneObject curTextMsg  = null;
-    private GVRSceneObject curColorObj  = null;
+    private GVRSceneObject lastColorObj  = null;
     private String[] arrNames = {"gray","blue","brown","green","red","black","yellow","purple" };
     private int[] selNames = new int[8]; private int selNamesCounter;
 
@@ -130,11 +130,11 @@ public class ColorTestScene extends GVRScene {
     }
 
     public void onTouchEvent() {
-        Log.d(TAG, "Pick event.");
+        Log.d(TAG, "Touch event.");
         if (mPickHandler.PickedObject!=null){
-            Log.d(TAG, "Pick name="+mPickHandler.PickedObject.getName());
+            Log.d(TAG, "Touch name="+mPickHandler.PickedObject.getName());
             String[] tag =(String[]) mPickHandler.PickedObject.getTag();
-            Log.d(TAG, "Pick name="+tag[0]);
+//            Log.d(TAG, "Touch type="+tag[0]);
             String name = mPickHandler.PickedObject.getName();
             switch (tag[0]) {
                 case "cMenu": selectColor(getSceneObjectByName(mPickHandler.PickedObject.getName()));
@@ -153,25 +153,24 @@ public class ColorTestScene extends GVRScene {
                         //                  case "home": break;
                         default: break;
                     } break;
-                default:
-                    break;
-
-        }
+                default: break; }
     }}
 
     private void selectColor(GVRSceneObject selObj){
+        Log.d(TAG,"start selectColor for "+selObj.getName());
         if(curSelection==null && curSelection != selObj){
 //            selObj.detachCollider();
 //            selObj.setPickingEnabled(false);
             String curSelectionName = selObj.getName();
-            Log.d(TAG,"start animation "+curSelectionName);
+            Log.d(TAG,"start animation color "+curSelectionName);
             curSelection = selObj;
-            mPickHandler.onExit(curSelection);
+            mPickHandler.onNoPick(mPicker);
             long curTime = System.currentTimeMillis();
-            addTimerRes("select_"+curSelectionName,curTime-timerList.get("startSelect"));
+            long addTime = curTime-timerList.get("startSelect");
+            addTimerRes("select_"+curSelectionName,addTime);
             timerList.put("startSelect",curTime);
             int i = Integer.parseInt(curSelectionName); selNames[selNamesCounter]=i; selNamesCounter++;
-//            Log.d(TAG,"start animation 2  "+selObj.getName());
+            Log.d(TAG,"colorSelect "+curSelectionName+" time ="+addTime);
             new GVROpacityAnimation(curSelection,1,0)
                 .setRepeatMode(GVRRepeatMode.ONCE)
                 .setRepeatCount(1)
@@ -180,28 +179,53 @@ public class ColorTestScene extends GVRScene {
     }else{Log.e(TAG,"error. can not find object"+selObj.getName());}
     }
 
-    private void showResult(String str){
+    private void showResult(){
         long total = System.currentTimeMillis()-timerList.get("start");
-//        addTimerRes("total",total);
+        String strRes="Total time: "+ total+"ms; ";
+//        Log.d(TAG,"result lengh="+timerListRes.size());
+//        Iterator<String[]> strIter = timerListRes.iterator();
+        for(int j=0;j<timerListRes.size();j++) {
+//            Log.d(TAG,"result j="+j);
+            try {String[] strIter = timerListRes.get(j);
+//                Log.d(TAG,"name="+strIter[0]+"res="+strIter[1]);
+                long resTime = Long.parseLong(strIter[1]);
+                String res = String.valueOf(Math.round(resTime * 100 / total));
+                strRes += strIter[0] + ": " + res + "%; ";
+            }catch (Exception e){Log.d(TAG,"Error parse result arraylist");}
+        }
+        Log.d(TAG,"Show result"+Arrays.toString(selNames)+" timer="+strRes);
+        showTaskStart(arrColorStr[3]);
+    }
+
+    private void showResultStart(){
         for (GVRSceneObject object : getWholeSceneObjects()) {
             if (object.getTag()!=null){
                 String[] tag = (String[]) object.getTag();
                 if(tag[0].equals("cMenu")){
                     Log.d(TAG,"Show result delete obj "+object.getName());
+                    lastColorObj = object;
                     selNames[7]=Integer.parseInt(object.getName());
-                    gContext.getMainScene().removeSceneObject(object);}}
+                    new GVROpacityAnimation(lastColorObj,1,0)
+                            .setRepeatMode(GVRRepeatMode.ONCE)
+                            .setRepeatCount(1)
+                            .start(gContext.getAnimationEngine())
+                            .setOnFinish(new GVROnFinish(){ @Override public void finished(GVRAnimation animation){
+                                Log.d(TAG,"delete task Message");
+//                                gContext.getMainScene().removeSceneObject(lastColorObj);
+                                if(lastColorObj != null) {gContext.getMainScene().removeSceneObject(lastColorObj);lastColorObj = null;};
+                                showResult();
+                            }});
+                }}
         }
-        String strRes="Total time: "+ total+"ms; ";
-        Iterator<String[]> strIter = timerListRes.iterator();
-        while(strIter.hasNext()) {
-            try {
-                Log.d(TAG,"res="+strIter.next()[1]+" name="+strIter.next()[0]);
-                long resTime = Long.parseLong(strIter.next()[1]);
-                String res = String.valueOf(Math.round(resTime * 100 / total));
-                strRes += strIter.next()[0] + ": " + res + "%; ";
-            }catch (Exception e){Log.d(TAG,"Error parse result arraylist");}}
-        Log.d(TAG,"Show result"+Arrays.toString(selNames)+" timer="+strRes);
-        showTask(str);
+        new GVROpacityAnimation(curTaskText,1,0)
+                .setRepeatMode(GVRRepeatMode.ONCE)
+                .setRepeatCount(1)
+                .start(gContext.getAnimationEngine())
+                .setOnFinish(new GVROnFinish(){ @Override public void finished(GVRAnimation animation){
+                    Log.d(TAG,"delete task Message");
+                    if(curTaskText != null) {gContext.getMainScene().removeSceneObject(curTaskText);curTaskText = null;};
+                    showResult();
+                }});
     }
 
     private void showMsg(String str){
@@ -224,9 +248,8 @@ public class ColorTestScene extends GVRScene {
                 .setRepeatCount(1)
                 .start(gContext.getAnimationEngine())
                 .setOnFinish(new GVROnFinish(){ @Override public void finished(GVRAnimation animation){
-                    Log.d(TAG,"Show 3 msg: ");
+//                    Log.d(TAG,"Show 3 msg: ");
                     animateDeleteMsg();}});
-
 
 }
 
@@ -267,25 +290,23 @@ public class ColorTestScene extends GVRScene {
 //            String[] tag =(String[]) curSelection.getTag();
             int i = Integer.parseInt(curSelection.getName());
 //            Log.d(TAG,"find loc "+curSelection.getName()+" i="+i);
-            if(i==1 || i==5){
-//                Log.d(TAG,"i= 1,5");
-                GVRSceneObject obj = gContext.getMainScene().getSceneObjectByName(String.valueOf(i-1));
-                obj.getTransform().setPosition(arrLoc[i][0], arrLoc[i][1], -5);
-            }
-            if(i==2 || i==6){
-//                Log.d(TAG,"i= 2,6");
-                GVRSceneObject obj = gContext.getMainScene().getSceneObjectByName(String.valueOf(i+1));
-                obj.getTransform().setPosition(arrLoc[i][0], arrLoc[i][1], -5);
-            }
+//            if(i==1 || i==5){
+////                Log.d(TAG,"i= 1,5");
+//                GVRSceneObject obj = gContext.getMainScene().getSceneObjectByName(String.valueOf(i-1));
+//                obj.getTransform().setPosition(arrLoc[i][0], arrLoc[i][1], -5);
+//            }
+//            if(i==2 || i==6){
+////                Log.d(TAG,"i= 2,6");
+//                GVRSceneObject obj = gContext.getMainScene().getSceneObjectByName(String.valueOf(i+1));
+//                obj.getTransform().setPosition(arrLoc[i][0], arrLoc[i][1], -5);
+//            }
+
             gContext.getMainScene().removeSceneObject(curSelection);
             curSelection=null;
             selectCounter++;
-            if(selectCounter==7){
-
-                showResult(arrColorStr[3]);}
+            if(selectCounter==7){ showResultStart();}
             //else{showTask(arrColorStr[0]);}
-        }else{showTask(arrColorStr[0]); createBase();}
-
+        }else{showTaskStart(arrColorStr[0]); createBase();}
 //        Log.d(TAG,"selNumber="+selNumCounter);
 //        if(selNumCounter>0){ selNumCounter--;  //  Log.d(TAG,"One color selected");
 //        }else{
@@ -304,20 +325,20 @@ public class ColorTestScene extends GVRScene {
     }
 
     private void animateDeleteMsg(){
-        Log.d(TAG,"delete Message");
+//        Log.d(TAG,"delete Message");
         new GVROpacityAnimation(curTextMsg,1,0)
                 .setRepeatMode(GVRRepeatMode.ONCE)
                 .setRepeatCount(1)
                 .start(gContext.getAnimationEngine())
                 .setOnFinish(new GVROnFinish(){ @Override public void finished(GVRAnimation animation){
-                     Log.d(TAG,"delete 2 Message");
+//                     Log.d(TAG,"delete 2 Message");
                     gContext.getMainScene().removeSceneObject(curTextMsg); curTextMsg=null;
                     startSelect();
                 }});
 
   }
 
-    private void showTask(String str){
+    private void showTaskStart(String str){
         Log.d(TAG,"Show task :"+str);
         if(curTaskText != null) {gContext.getMainScene().removeSceneObject(curTaskText);curTaskText = null;};
         int textClr = Color.rgb(51, 55, 64);
@@ -327,11 +348,19 @@ public class ColorTestScene extends GVRScene {
         item.setTextColor(textClr);
         item.setGravity(Gravity.CENTER);
         item.setTextSize(7);
+        item.getRenderData().getMaterial().setOpacity(0);
         item.setBackgroundColor(bckClr);
-        item.getTransform().setPosition(0, 2, -5);
+        item.getTransform().setPosition(0, 2.25f, -5);
 //            itemName.getTransform().rotateByAxis(-90f, 0f, 1f, 0f);
         curTaskText = item;
         addSceneObject(item);
+        new GVROpacityAnimation(curTaskText,1,1)
+                .setRepeatMode(GVRRepeatMode.ONCE)
+                .setRepeatCount(1)
+                .start(gContext.getAnimationEngine())
+                .setOnFinish(new GVROnFinish(){ @Override public void finished(GVRAnimation animation){
+                    Log.d(TAG,"End show task.");
+                    }});
 
     }
 
@@ -342,30 +371,21 @@ public class ColorTestScene extends GVRScene {
             Bitmap bitmapAlpha = Bitmap.createBitmap(colors, 300, 300, Bitmap.Config.ARGB_8888);
             GVRBitmapTexture texture = new GVRBitmapTexture(gContext, bitmapAlpha);
             GVRSceneObject obj = new GVRSceneObject(gContext, 1, 1, texture);
-//            Log.d(TAG, "obj Id =" + i +" name="+arrNames[i]);
+//            try {
+//              ff.setScriptText("function onPick(){utils.log(\" !!!script log: enter\");}", GVRScriptManager.LANG_JAVASCRIPT);
+//              ff.onPick(mPicker);
+//            }catch (Exception e){Log.d(TAG,"Error add script");}
+//            obj.attachComponent(ff);
             obj.attachComponent(new GVRSphereCollider(gContext));
-            try {
-                GVRScriptBehavior ff = new GVRScriptBehavior(gContext);
-                //            ff.setScriptText("test","Log.d(TAG,'hello from attach');");
-                ff.setScriptText("utils.log(\" !!!!!!test script log: onSetScript\");", GVRScriptManager.LANG_JAVASCRIPT);
-//                ff.setScriptFile(, GVRScriptManager.LANG_JAVASCRIPT);
-//                scriptManager.addVariable("tst2", ff);
-//                ff.onEnable();
-//                utils.log();
-//                ff.onStep();
-//                ff.invoke();
-//                ff.onPick(mPicker);
-//                ff.enable();
-                obj.attachComponent(ff);
-            }catch (Exception e){Log.d(TAG,"Error add script");}
-//            obj.attachComponent(new GVRScriptBehavior(gContext,));
-//            obj.attachCollider(new GVRSphereCollider(gContext));
             obj.setName(String.valueOf(i)); //   String[] arr = {"cMenu", name};
             String[] tag = {"cMenu", arrNames[i]};
             obj.setTag(tag);
             obj.getRenderData().getMaterial().setOpacity(0);
             obj.getTransform().setPosition(arrLoc[i][0], arrLoc[i][1], -5);
             addSceneObject(obj);
+//            Log.d(TAG,"a1");
+//            ff.attachScript(obj);
+//            Log.d(TAG,"a2");
             if (obj.getRenderData() != null && obj.getRenderData().getMaterial() != null) {
 //                Log.d(TAG, "obj start anim Id =" + i +" name="+arrNames[i]);
                 GVRAnimation anim = new GVROpacityAnimation(obj, 2, 1)
@@ -380,12 +400,12 @@ public class ColorTestScene extends GVRScene {
         }
     }
 
-//    public void addTimer(String name, long time){ timerList.put(name, time);}
-//    public void removeTimer(String name){ timerList.remove(name);}
     public static long getTimer(String name){ return timerList.get(name);}
 
-
     public static void addTimerRes(String name, long time){
+//        Log.d(TAG,"1 add data to res "+name+" "+time);
         String[] strArr ={name, String.valueOf(time)};
-        timerListRes.add(strArr);}
+        timerListRes.add(strArr);
+//        Log.d(TAG,"2 add data to res "+strArr[0]+" "+strArr[1]+" lenght="+timerListRes.size());
+    }
 }
