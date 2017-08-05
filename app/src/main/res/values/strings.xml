@@ -1,7 +1,8 @@
 <resources>
-    <string name="selectStart">"Please prepered to the test. You should select some item according to the instruction."</string>
+    <string name="selectStart">"Please prepared to the test. You should select some item according to the instruction."</string>
     <string name="select1">"Please select  likely colors one by one"</string>
     <string name="select2">"Please select 2 unlikely colors"</string>
     <string name="select3">"Please select one likely color"</string>
     <string name="select4">"Your results:"</string>
+    <string name="select5">"Error"</string>
 </resources>

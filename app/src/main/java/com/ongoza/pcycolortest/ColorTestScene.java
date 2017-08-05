@@ -52,7 +52,7 @@ public class ColorTestScene extends GVRScene {
     private static ArrayList<String[]> timerListRes = new ArrayList<String[]>();
     private static final String TAG = Main.getTAG();
     private float[][] arrLoc = new float[8][2];
-    private String[] arrColorStr = new String[4];
+    private String[] arrColorStr = new String[5];
     private int arrColorStrCounter =0;
     private Context mContext;
     private int[][] arrColor = new int[8][3];
@@ -68,13 +68,21 @@ public class ColorTestScene extends GVRScene {
     private GVRSceneObject curSelection = null;
     private GVRSceneObject curTextMsg  = null;
     private GVRSceneObject lastColorObj  = null;
-    private String[] arrNames = {"gray","blue","brown","green","red","black","yellow","purple" };
+    private String[] arrNames = {"gray","blue","green","red","yellow","purple","brown","black" };
+//    private String[] arrNames = {"gray","blue","brown","green","red","black","yellow","purple" };
     private int[] selNames = new int[8]; private int selNamesCounter;
 
     public ColorTestScene(GVRContext gContext, Context mContext, Main main) {
         super(gContext);
+//        Log.d(TAG, " scene 0");
+        this.main = main;
+        this.gContext =gContext;
+        this.mContext =mContext;
+        trSelect = false;
         createArrays();
+//        Log.d(TAG, " scene 1");
         scriptManager = gContext.getScriptManager();
+//        Log.d(TAG, " scene 2");
         GVRScriptFile scriptFile;
         try { scriptFile = scriptManager.loadScript( new GVRAndroidResource(getGVRContext(),"script.js"),
                     GVRScriptManager.LANG_JAVASCRIPT);
@@ -82,13 +90,7 @@ public class ColorTestScene extends GVRScene {
         catch (IOException | GVRScriptException e) { e.printStackTrace();}
         scriptManager.addVariable("test",new ScriptObj());
         scriptManager.addVariable("utils", new ScriptUtils());
-        this.main = main;
-//        scriptManager;
-        scriptManager = getGVRContext().getScriptManager();
-        scriptManager.addVariable("testObj", new ScriptObj());
-        trSelect = false;
-        this.gContext =gContext;
-        this.mContext =mContext;
+//        Log.d(TAG, " scene 3");
         getMainCameraRig().getOwnerObject().attachComponent(new GVRPicker(gContext, this));
         getMainCameraRig().getLeftCamera().setBackgroundColor(1.0f, 1.0f, 1.0f, 1.0f);
         getMainCameraRig().getRightCamera().setBackgroundColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -99,28 +101,36 @@ public class ColorTestScene extends GVRScene {
         headTracker.setName("Head");
         headTracker.getRenderData().setDepthTest(false);
         headTracker.getRenderData().setRenderingOrder(100000);
-        getMainCameraRig().addChildObject(headTracker);;
+        getMainCameraRig().addChildObject(headTracker);
+//        Log.d(TAG, " scene 4");
         arrColorStr[0]="Please select the more pleasure color one by one.";
         arrColorStr[1]=Main.mContext.getResources().getString(R.string.select2);
         arrColorStr[2]=Main.mContext.getResources().getString(R.string.select3);
         arrColorStr[3]=Main.mContext.getResources().getString(R.string.select4);
+//        Log.d(TAG, " scene 5");
+        arrColorStr[4]=Main.mContext.getResources().getString(R.string.select5);
+//        Log.d(TAG, " scene 6");
         mPickHandler = new PickHandler();
         getEventReceiver().addListener(mPickHandler);
         mPicker = new GVRPicker(gContext, this);
+//        Log.d(TAG, " scene 7");
         abt = new About(gContext);
+//        Log.d(TAG, " scene 8");
         addSceneObject(abt);
+//        Log.d(TAG, " scene 9");
         show();
     }
 
     private void createArrays(){
         arrColor[0] = new int[]{171, 171, 171};
         arrColor[1] = new int[]{51, 0, 168};
-        arrColor[2] = new int[]{144, 88, 9};
-        arrColor[3] = new int[]{3, 114, 21};
-        arrColor[4] = new int[]{246, 6, 22};
-        arrColor[5] = new int[]{0, 0, 0};
-        arrColor[6] = new int[]{251, 251, 2};
-        arrColor[7] = new int[]{168, 0, 59};
+        arrColor[2] = new int[]{3, 114, 21};
+        arrColor[3] = new int[]{246, 6, 22};
+        arrColor[4] = new int[]{251, 251, 2};
+        arrColor[5] = new int[]{168, 0, 59};
+        arrColor[6] = new int[]{144, 88, 9};
+        arrColor[7] = new int[]{0, 0, 0};
+
         float[] xLoc = {-2.5f,-0.75f,0.75f,2.5f};
         float[] yLoc = {0.75f,-0.75f};
         for (int i = 0; i < 2; i++){ int h=4;
@@ -179,22 +189,37 @@ public class ColorTestScene extends GVRScene {
     }else{Log.e(TAG,"error. can not find object"+selObj.getName());}
     }
 
-    private void showResult(){
-        long total = System.currentTimeMillis()-timerList.get("start");
-        String strRes="Total time: "+ total+"ms; ";
+    private void showResult() {
+        long total = System.currentTimeMillis() - timerList.get("start");
+        String strRes = "Total time: " + total + "ms; ";
 //        Log.d(TAG,"result lengh="+timerListRes.size());
 //        Iterator<String[]> strIter = timerListRes.iterator();
-        for(int j=0;j<timerListRes.size();j++) {
+        for (int j = 0; j < timerListRes.size(); j++) {
 //            Log.d(TAG,"result j="+j);
-            try {String[] strIter = timerListRes.get(j);
+            try {
+                String[] strIter = timerListRes.get(j);
 //                Log.d(TAG,"name="+strIter[0]+"res="+strIter[1]);
                 long resTime = Long.parseLong(strIter[1]);
                 String res = String.valueOf(Math.round(resTime * 100 / total));
                 strRes += strIter[0] + ": " + res + "%; ";
-            }catch (Exception e){Log.d(TAG,"Error parse result arraylist");}
+            } catch (Exception e) {
+                Log.d(TAG, "Error parse result arraylist");
+            }
         }
-        Log.d(TAG,"Show result"+Arrays.toString(selNames)+" timer="+strRes);
-        showTaskStart(arrColorStr[3]);
+        float s = 0; float e = 0;
+        float[] kArray= new float[] {8.1f,6.8f,6,5.3f,4.7f,4,3.2f,1.8f};
+        if (selNames.length > 7) {
+            for(int i=0;i<selNames.length;i++){
+                if(i<3){if(selNames[i]==0 || selNames[i]==6 || selNames[i]==7){s+=kArray[i];}}
+                if(i>4){if(selNames[i]==1 || selNames[i]==2 || selNames[i]==3 || selNames[i]==4){s+=kArray[7-i];}}
+                if(selNames[i]==2 || selNames[i]==3 || selNames[i]==4){e+=kArray[i];}
+                Log.d(TAG, "Calculate: i=" +i+" color="+selNames[i]+" s=" +s+" e="+e); //
+            }
+            Log.d(TAG, "Show result" + Arrays.toString(selNames) + " timer=" + strRes);
+            Log.d(TAG, "Your Stress Level: s="+s+" %=" + Math.round(s*100/42));
+            Log.d(TAG, "Your Efficiency Level: e=" + e+" %="+Math.round((e-9)*100/12));
+            showMsg(arrColorStr[3]+"\nStress Level: "+Math.round(s*100/42)+"\nEfficiency Level: "+Math.round((e-9)*100/12),false);
+        }else{showTaskStart(arrColorStr[4]);}
     }
 
     private void showResultStart(){
@@ -228,7 +253,7 @@ public class ColorTestScene extends GVRScene {
                 }});
     }
 
-    private void showMsg(String str){
+    private void showMsg(String str, boolean delete){
         Log.d(TAG,"Show msg: "+str);
         if(curTextMsg!=null){Log.d(TAG,"Show msg delete prev: "); gContext.getMainScene().removeSceneObject(curTextMsg); curTextMsg=null;}
         Log.d(TAG,"Show 2 msg: "+str);
@@ -243,13 +268,15 @@ public class ColorTestScene extends GVRScene {
             item.getRenderData().getMaterial().setOpacity(0);
             item.getTransform().setPosition(0, 0, -5);
         curTextMsg = item; addSceneObject(item);
-        new GVROpacityAnimation(curTextMsg,1,1)
+        GVRAnimation an= new GVROpacityAnimation(curTextMsg,1,1)
                 .setRepeatMode(GVRRepeatMode.ONCE)
                 .setRepeatCount(1)
-                .start(gContext.getAnimationEngine())
-                .setOnFinish(new GVROnFinish(){ @Override public void finished(GVRAnimation animation){
+                .start(gContext.getAnimationEngine());
+        if(delete){
+                an.setOnFinish(new GVROnFinish(){ @Override public void finished(GVRAnimation animation){
 //                    Log.d(TAG,"Show 3 msg: ");
                     animateDeleteMsg();}});
+        }
 
 }
 
@@ -265,7 +292,7 @@ public class ColorTestScene extends GVRScene {
             }
         }
         String str = "Please prepare to the test. You should select the more pleasure color one by one.";
-        showMsg(str);
+        showMsg(str,true);
     }
 
     public void hide() {

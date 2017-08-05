@@ -2,6 +2,7 @@ package com.ongoza.pcycolortest;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.util.Log;
 import android.view.MotionEvent;
 import org.gearvrf.GVRContext;
 import org.gearvrf.GVRMain;
@@ -26,12 +27,17 @@ public class Main extends GVRMain {
     private Resources resources;
     private static ColorTestScene  colorTestScene;
 
-    public Main(MainActivity activity) {  mContext = activity;  }
+    public Main(MainActivity activity) {
+//        Log.d(TAG, " start main 000");
+        mContext = activity;  }
 
     @Override public void onInit(GVRContext gvrContext) throws Throwable {
         this.gContext = gvrContext;
+//        Log.d(TAG, " start main 1");
         colorTestScene = new ColorTestScene(gContext, mContext, this );
+//        Log.d(TAG, " start activity 2");
         gContext.setMainScene(colorTestScene);
+//        Log.d(TAG, " start activity 3");
     }
 
     @Override public void onStep() {}
