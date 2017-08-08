@@ -1,6 +1,7 @@
 package com.ongoza.pcycolortest;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.CountDownTimer;
@@ -30,6 +31,7 @@ import org.gearvrf.script.GVRScriptException;
 import org.gearvrf.script.GVRScriptFile;
 import org.gearvrf.script.GVRScriptManager;
 import org.gearvrf.utility.Log;
+import org.json.JSONObject;
 //import com.google.common.base.Joiner;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 
 /**
  * Created by os on 6/1/17.
@@ -122,13 +125,14 @@ public class ColorTestScene extends GVRScene {
     }
 
     private void createArrays(){
+        // {"gray","blue","green","red","yellow","purple","brown","black" };
         arrColor[0] = new int[]{171, 171, 171};
-        arrColor[1] = new int[]{51, 0, 168};
+        arrColor[1] = new int[]{0, 0, 128};
         arrColor[2] = new int[]{3, 114, 21};
         arrColor[3] = new int[]{246, 6, 22};
         arrColor[4] = new int[]{251, 251, 2};
-        arrColor[5] = new int[]{168, 0, 59};
-        arrColor[6] = new int[]{144, 88, 9};
+        arrColor[5] = new int[]{139, 0, 139};
+        arrColor[6] = new int[]{139, 69, 19};
         arrColor[7] = new int[]{0, 0, 0};
 
         float[] xLoc = {-2.5f,-0.75f,0.75f,2.5f};
@@ -191,7 +195,7 @@ public class ColorTestScene extends GVRScene {
 
     private void showResult() {
         long total = System.currentTimeMillis() - timerList.get("start");
-        String strRes = "Total time: " + total + "ms; ";
+        String strRes = "\"Total time\": \"" + total + "ms\"";
 //        Log.d(TAG,"result lengh="+timerListRes.size());
 //        Iterator<String[]> strIter = timerListRes.iterator();
         for (int j = 0; j < timerListRes.size(); j++) {
@@ -201,7 +205,7 @@ public class ColorTestScene extends GVRScene {
 //                Log.d(TAG,"name="+strIter[0]+"res="+strIter[1]);
                 long resTime = Long.parseLong(strIter[1]);
                 String res = String.valueOf(Math.round(resTime * 100 / total));
-                strRes += strIter[0] + ": " + res + "%; ";
+                strRes += ",\""+strIter[0] +"\""+ ": \"" + res + "\"";
             } catch (Exception e) {
                 Log.d(TAG, "Error parse result arraylist");
             }
@@ -213,9 +217,12 @@ public class ColorTestScene extends GVRScene {
                 if(i<3){if(selNames[i]==0 || selNames[i]==6 || selNames[i]==7){s+=kArray[i];}}
                 if(i>4){if(selNames[i]==1 || selNames[i]==2 || selNames[i]==3 || selNames[i]==4){s+=kArray[7-i];}}
                 if(selNames[i]==2 || selNames[i]==3 || selNames[i]==4){e+=kArray[i];}
-                Log.d(TAG, "Calculate: i=" +i+" color="+selNames[i]+" s=" +s+" e="+e); //
+                Log.e(TAG, "Calculate: i=" +i+" color="+selNames[i]+" s=" +s+" e="+e); //
             }
-            Log.d(TAG, "Show result" + Arrays.toString(selNames) + " timer=" + strRes);
+            String data = Arrays.toString(selNames);
+//            String times = timerListRes.toString();
+            Main.saveData(data,strRes);
+            Log.d(TAG, "Show result" + data + " timer=" + strRes);
             Log.d(TAG, "Your Stress Level: s="+s+" %=" + Math.round(s*100/42));
             Log.d(TAG, "Your Efficiency Level: e=" + e+" %="+Math.round((e-9)*100/12));
             showMsg(arrColorStr[3]+"\nStress Level: "+Math.round(s*100/42)+"\nEfficiency Level: "+Math.round((e-9)*100/12),false);

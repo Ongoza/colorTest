@@ -1,4 +1,5 @@
 <resources>
+    <string name="app_guid">"com.ongoza.vrte.guid"</string>
     <string name="selectStart">"Please prepared to the test. You should select some item according to the instruction."</string>
     <string name="select1">"Please select  likely colors one by one"</string>
     <string name="select2">"Please select 2 unlikely colors"</string>
