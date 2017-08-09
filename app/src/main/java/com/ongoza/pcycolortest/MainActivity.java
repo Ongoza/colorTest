@@ -28,14 +28,12 @@ public class MainActivity extends GVRActivity {
     private long mLatestButton = 0;
     private long mLatestTap = 0;
     private static final String TAG = "VRTest";
-    private static GVRFrameLayout mFrameLayoutLeft;
     Main main = null;
 //    private static GVRActivity activity;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        Log.d(TAG, " start activity 0");
-        createView();
         main = new Main(this);
 //        activity = this;
 //        Log.d(TAG, " start activity 01");
@@ -43,21 +41,8 @@ public class MainActivity extends GVRActivity {
 //        Log.d(TAG, " start activity 1");
         setMain(main, "gvr.xml");
 //        Log.d(TAG, " start activity 2");
-//
-
     }
 
-    private void createView() {
-        mFrameLayoutLeft = new GVRFrameLayout(this);
-        // mFrameLayoutLeft.setLayoutParams(new FrameLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-//        mFrameLayoutLeft.setBackgroundColor(Color.CYAN);
-        View.inflate(this, R.layout.activity_msg, mFrameLayoutLeft);
-
-    }
-
-    public static GVRFrameLayout getFrameLayoutLeft() {
-        return mFrameLayoutLeft;
-    }
 
     @Override public boolean onTouchEvent(MotionEvent event) {
 //        Log.d(TAG, " motion event");
@@ -65,7 +50,6 @@ public class MainActivity extends GVRActivity {
         return super.onTouchEvent(event);
     }
 
-//    public static GVRActivity getActivity(){ return activity;   }
 
 //    @Override public void onBackPressed() {
 //        if (System.currentTimeMillis() > mLatestButton + BUTTON_INTERVAL) {
