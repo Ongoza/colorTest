@@ -4,6 +4,7 @@ System.setProperty("appName", "Pchy color test")
 
 allprojects {
     repositories {
+        maven { url "https://jitpack.io" }
         jcenter()
     }
 }
@@ -55,6 +56,7 @@ dependencies {
 //    compile 'org.gearvrf:GearWearIoDevice:3.1.1'
     compile 'com.google.vr:sdk-base:1.60.0'
     compile 'org.gearvrf:backend_daydream:3.1.1'
+    compile 'com.github.bmarrdev:android-DecoView-charting:v1.2'
 //    compile 'com.google.protobuf.nano:protobuf-javanano:3.0.0-alpha-7'
     compile 'org.mongodb:mongo-java-driver:3.2.2'
     compile 'org.mongodb:mongodb-driver:3.4.2'

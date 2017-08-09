@@ -1,0 +1,24 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/msgLayout"
+    android:layout_width="750px"
+    android:layout_height="400px"
+    android:gravity="center_horizontal"
+    >
+
+    <TextView
+        android:id="@+id/Message"
+        android:layout_width="750px"
+        android:layout_height="400px"
+        android:background="@drawable/rounded"
+        android:elevation="11dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="25px"
+        android:paddingLeft="25px"
+        android:paddingRight="25px"
+        android:text="Test result"
+        android:textAlignment="center"
+        android:textSize="50px"
+        android:textStyle="bold" />
+
+</RelativeLayout>

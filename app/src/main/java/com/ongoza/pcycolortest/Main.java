@@ -1,13 +1,18 @@
-//TODO добавить меню выход
-//TODO добавить меню рестарт
+//TODO сделать красивый экран вывода результатов
+// TODO на экран c результатами вывести 3 кнопки выход, рестарт, абаут
 
-//TODO сделать красивые сообщения и кнопки
-//TODO сделать карточки как объекты - паралелльное исчезновение
+// TODO найти глюк с миганием экрана
 
+//-----------------------------------
+
+// TODO сделать второе прохождение
 //TODO сделать вывод результатов в виде двух полосок с анимацией и текстом
 
 //TODO потом добавить поле ввода почты
 //TODO сделать сайт с результатами
+
+// Connection to MongoDB by Sleepy.Mongoose
+// https://disqus.com/home/discussion/snailinaturtleneck/sleepymongoose_a_mongodb_rest_interface/newest/
 
 package com.ongoza.pcycolortest;
 
@@ -19,6 +24,8 @@ import android.net.Network;
 import android.text.format.Formatter;
 import android.util.Log;
 import android.view.MotionEvent;
+
+import org.gearvrf.GVRActivity;
 import org.gearvrf.GVRContext;
 import org.gearvrf.GVRMain;
 import org.gearvrf.GVRPicker;
@@ -60,6 +67,7 @@ public class Main extends GVRMain {
     private static final String TAG = "VRTest";
     private GVRContext gContext;
     public static Context mContext;
+    public static GVRActivity aContext;
     private static String guid;
     private Resources resources;
     private static final String USER_AGENT = "Mozilla/5.0";
@@ -67,16 +75,16 @@ public class Main extends GVRMain {
 
     public Main(MainActivity activity) {
 //        Log.d(TAG, " start main 000");
-        mContext = activity;  }
+        mContext = activity; aContext = activity; }
 
     @Override public void onInit(GVRContext gvrContext) throws Throwable {
         this.gContext = gvrContext;
 //        Log.d(TAG, " start main 1");
         colorTestScene = new ColorTestScene(gContext, mContext, this );
-        loadGUID();
-        saveData("[5, 1, 2, 6, 3, 7, 4, 0]", "\"time\": \"15430ms\"");
-//        Log.d(TAG, " start activity 2");
+//        saveData("[5, 1, 2, 6, 3, 7, 4, 0]", "\"time\": \"15430ms\"");
+//        Log.e(TAG, " start activity 2");
         gContext.setMainScene(colorTestScene);
+        loadGUID();
     }
 
     @Override public void onStep() {}

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/OK"
+        android:layout_width="150px"
+        android:layout_height="50px"
+        android:background="@drawable/buttonshape"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="OK"
+        android:textAlignment="center"
+        android:textSize="30px"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/About"
+        android:layout_width="150px"
+        android:layout_height="50px"
+        android:background="@drawable/buttonshape"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="About"
+        android:textAlignment="center"
+        android:textSize="30px"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/Restart"
+        android:layout_width="150px"
+        android:layout_height="50px"
+        android:background="@drawable/buttonshape"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="Restart"
+        android:textAlignment="center"
+        android:textSize="30px"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/Exit"
+        android:layout_width="150px"
+        android:layout_height="50px"
+        android:background="@drawable/buttonshape"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="Exit"
+        android:textAlignment="center"
+        android:textSize="30px"
+        android:textStyle="bold" />
+
+</RelativeLayout>

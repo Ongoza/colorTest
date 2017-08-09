@@ -1,12 +1,20 @@
 package com.ongoza.pcycolortest;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+
 import org.gearvrf.GVRActivity;
+
 import org.gearvrf.GVRAndroidResource;
+import org.gearvrf.scene_objects.view.GVRFrameLayout;
+import org.gearvrf.scene_objects.view.GVRView;
 import org.gearvrf.script.GVRScriptException;
 import org.gearvrf.script.GVRScriptFile;
 import org.gearvrf.script.GVRScriptManager;
@@ -20,12 +28,16 @@ public class MainActivity extends GVRActivity {
     private long mLatestButton = 0;
     private long mLatestTap = 0;
     private static final String TAG = "VRTest";
+    private static GVRFrameLayout mFrameLayoutLeft;
     Main main = null;
+//    private static GVRActivity activity;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        Log.d(TAG, " start activity 0");
+        createView();
         main = new Main(this);
+//        activity = this;
 //        Log.d(TAG, " start activity 01");
 //        main.mContext = this;
 //        Log.d(TAG, " start activity 1");
@@ -35,12 +47,25 @@ public class MainActivity extends GVRActivity {
 
     }
 
+    private void createView() {
+        mFrameLayoutLeft = new GVRFrameLayout(this);
+        // mFrameLayoutLeft.setLayoutParams(new FrameLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+//        mFrameLayoutLeft.setBackgroundColor(Color.CYAN);
+        View.inflate(this, R.layout.activity_msg, mFrameLayoutLeft);
+
+    }
+
+    public static GVRFrameLayout getFrameLayoutLeft() {
+        return mFrameLayoutLeft;
+    }
+
     @Override public boolean onTouchEvent(MotionEvent event) {
 //        Log.d(TAG, " motion event");
         main.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
 
+//    public static GVRActivity getActivity(){ return activity;   }
 
 //    @Override public void onBackPressed() {
 //        if (System.currentTimeMillis() > mLatestButton + BUTTON_INTERVAL) {
