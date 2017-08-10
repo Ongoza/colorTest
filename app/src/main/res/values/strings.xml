@@ -1,9 +1,3 @@
 <resources>
-    <string name="app_guid">"com.ongoza.vrte.guid"</string>
-    <string name="selectStart">"Please pick the item with color that makes you feel the best one by one."</string>
-    <string name="select1">"Please select likely colors one by one"</string>
-    <string name="select2">"Please repeat test only one more time."</string>
-    <string name="select3">"Please select one likely color"</string>
-    <string name="select4">"Your results:"</string>
-    <string name="select5">"Error"</string>
+    <string name="app_guid">"com.ongoza.colortest.guid"</string>
 </resources>

@@ -1,10 +1,9 @@
 apply plugin: 'com.android.application'
 
-System.setProperty("appName", "Pchy color test")
+System.setProperty("appName", "Concentration Test")
 
 allprojects {
     repositories {
-        maven { url "https://jitpack.io" }
         jcenter()
     }
 }
@@ -12,9 +11,9 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "com.ongoza.pcycolortest"
+        applicationId "com.ongoza.colortest"
         minSdkVersion 24
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
     }
@@ -50,16 +49,6 @@ android {
 dependencies {
     compile 'org.gearvrf:framework:3.1.1'
     compile 'org.gearvrf:backend_oculus:3.1.0'
-
-//    compile 'org.gearvrf:3DCursorLibrary:3.1.1'
-//    compile 'org.gearvrf:gearwearlibrary:3.1.1'
-//    compile 'org.gearvrf:GearWearIoDevice:3.1.1'
     compile 'com.google.vr:sdk-base:1.60.0'
     compile 'org.gearvrf:backend_daydream:3.1.1'
-    compile 'com.github.bmarrdev:android-DecoView-charting:v1.2'
-//    compile 'com.google.protobuf.nano:protobuf-javanano:3.0.0-alpha-7'
-    compile 'org.mongodb:mongo-java-driver:3.2.2'
-    compile 'org.mongodb:mongodb-driver:3.4.2'
-
-
 }
