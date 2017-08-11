@@ -16,14 +16,14 @@ android {
             keyPassword 'bluher'
         }
     }
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "com.ongoza.colortest"
         minSdkVersion 23
-        targetSdkVersion 25
-        versionCode 3
-        versionName "1.03"
+        targetSdkVersion 26
+        versionCode 4
+        versionName "1.04"
         signingConfig signingConfigs.config
     }
     buildTypes {
