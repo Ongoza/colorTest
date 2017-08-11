@@ -8,27 +8,35 @@ allprojects {
     }
 }
 android {
+    signingConfigs {
+        config {
+            storeFile file('/home/os/colorTest/OSkuibidaKeyCT.jks')
+            storePassword 'bluher'
+            keyAlias 'key0'
+            keyPassword 'bluher'
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.ongoza.colortest"
         minSdkVersion 24
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.02"
+        signingConfig signingConfigs.config
     }
     buildTypes {
         debug {
             resValue 'string', 'app_name', System.getProperty("appName")
-            debuggable true
         }
         release {
             minifyEnabled true
+            signingConfig signingConfigs.config
             resValue 'string', 'app_name', System.getProperty("appName")
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
             output.outputFile = new File(
@@ -36,13 +44,14 @@ android {
                     System.getProperty("appName") + ".apk")
         }
     }
-
     packagingOptions {
         exclude 'lib/x86/libgvrbase.so'
         exclude 'lib/arm64-v8a/libgvrbase.so'
         if (!rootProject.hasProperty("ARM64")) {
             exclude 'lib/arm64-v8a/*.so'
         }
+    }
+    productFlavors {
     }
 }
 
