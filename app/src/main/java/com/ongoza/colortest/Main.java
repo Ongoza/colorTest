@@ -1,5 +1,6 @@
 
-//-----------------------------------
+//TODO сделать сайт для статистики
+//----------------------------
 //TODO потом добавить поле ввода почты
 //TODO сделать сайт с результатами
 
@@ -75,7 +76,8 @@ class Main extends GVRMain {
         HttpURLConnection con;
         if(conMgr.getActiveNetworkInfo().isConnected()) {
             try {
-                String url = "http://192.168.1.30:27080/local/dbColors/_insert";
+                // db.createCollection(dbColors)
+                String url = "http://91.212.177.22:27080/local/dbColors/_insert";
                 URL obj = new URL(url);
                 Log.e(TAG, " start save 11 url=" + url);
                 con = (HttpURLConnection) obj.openConnection();
