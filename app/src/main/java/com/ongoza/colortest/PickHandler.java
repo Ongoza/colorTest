@@ -23,6 +23,7 @@ class PickHandler implements IPickEvents {
                 }else{
                     long selTime = ColorTestScene.getTimer("startSelect");
                     ColorTestScene.addTimerRes(PickedObject.getName(), curTime - selTime);}
+
                 PickedObject.getTransform().setScale(1f,1f,1f);
                 PickedObject = null;
         }else{Log.d(TAG, "no Pick no name timer="+timer);timer=0;}

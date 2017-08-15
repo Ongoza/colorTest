@@ -42,6 +42,7 @@ class ColorTestScene extends GVRScene {
     private int[][] arrColor = new int[8][3];
     private int selectCounter=0;
     private GVRSceneObject rootResult;
+    private GVRSceneObject rootScene;
     private GVRSceneObject rootAbout;
     private Card[] listCards = new Card[8];
     private GVRSceneObject curSelection = null;
@@ -70,6 +71,8 @@ class ColorTestScene extends GVRScene {
         getEventReceiver().addListener(mPickHandler);
         mPicker = new GVRPicker(gContext, this);
         Log.d(TAG, " start scene 003");
+        rootScene = new GVRSceneObject(gContext);
+        addSceneObject(rootScene);
         createArrays();
         Log.d(TAG, "start color scene");
         show();
@@ -147,10 +150,10 @@ class ColorTestScene extends GVRScene {
 //            Log.d(TAG,"colorSelect "+curSelectionName+" time ="+addTime);
             listCards[i].deleteCard();
             startSelect();
-        }else{Log.e(TAG,"error. can not find object"+selObj.getName());}
+        }else{Log.d(TAG,"error. can not find object"+selObj.getName());}
     }
 
-    private void hideResult() { if(rootResult!=null){ removeSceneObject(rootResult); rootResult=null;}}
+    private void hideResult() { if(rootResult!=null){ rootScene.removeChildObject(rootResult); rootResult=null;}}
 
     private void showAbout(){
         rootAbout = new GVRSceneObject(gContext);
@@ -177,11 +180,12 @@ class ColorTestScene extends GVRScene {
                     .setRepeatCount(1)
                     .start(gContext.getAnimationEngine());
         }
-        addSceneObject(rootAbout);
+        rootScene.addChildObject(rootAbout);
+//        addSceneObject(rootAbout);
 
     }
 
-    private void hideAbout(){  if(rootAbout!=null){removeSceneObject(rootAbout);rootAbout=null;}}
+    private void hideAbout(){  if(rootAbout!=null){rootScene.removeChildObject(rootAbout);rootAbout=null;}}
 
     private void showResult() {
 //        Log.d(TAG,"start show results");
@@ -215,7 +219,8 @@ class ColorTestScene extends GVRScene {
                     .setRepeatCount(1)
                     .start(gContext.getAnimationEngine());
         }
-        addSceneObject(rootResult);
+//        addSceneObject(rootResult);
+        rootScene.addChildObject(rootResult);
 //        Log.d(TAG,"start show results 7");
     }
 
@@ -248,7 +253,7 @@ class ColorTestScene extends GVRScene {
                 long resTime = Long.parseLong(strIter[1]);
                 String res = String.valueOf(Math.round(resTime * 100 / total));
                 strRes += ",\""+strIter[0] +"\""+ ": \"" + res + "\"";
-            } catch (Exception e) {  Log.e(TAG, "Error parse result arraylist");  }
+            } catch (Exception e) {  Log.d(TAG, "Error parse result arraylist");  }
         }
         float s = 0; float e = 0;
         float[] kArray= new float[] {8.1f,6.8f,6,5.3f,4.7f,4,3.2f,1.8f};
@@ -272,7 +277,10 @@ class ColorTestScene extends GVRScene {
                 .start(gContext.getAnimationEngine())
                 .setOnFinish(new GVROnFinish(){ @Override public void finished(GVRAnimation animation){
                     Log.d(TAG,"delete task Message");
-                    if(curTextMsg != null) {gContext.getMainScene().removeSceneObject(curTextMsg);curTextMsg = null;}
+                    if(curTextMsg != null) {
+                        rootScene.removeChildObject(curTextMsg);
+//                        gContext.getMainScene().removeSceneObject(curTextMsg);
+                        curTextMsg = null;}
 //                    Log.d(TAG,"start show results 0");
                     showResult();
                 }});
@@ -287,7 +295,8 @@ class ColorTestScene extends GVRScene {
         item.getRenderData().setRenderingOrder(OVERLAY);
         item.getRenderData().getMaterial().setOpacity(0);
         curTextMsg = item;
-        addSceneObject(item);
+        rootScene.addChildObject(item);
+//        addSceneObject(item);
         GVRAnimation an= new GVROpacityAnimation(curTextMsg,1,1)
                 .setRepeatMode(GVRRepeatMode.ONCE)
                 .setRepeatCount(1)
@@ -475,7 +484,7 @@ class ColorTestScene extends GVRScene {
             Arrays.fill(colors, 0, 300 * 300, Color.argb(255, arrColor[i][0], arrColor[i][1], arrColor[i][2]));
             Bitmap bitmapAlpha = Bitmap.createBitmap(colors, 300, 300, Bitmap.Config.ARGB_8888);
             GVRBitmapTexture texture = new GVRBitmapTexture(gContext, bitmapAlpha);
-            listCards[i] = new Card(gContext,i,arrLoc[i],texture);
+            listCards[i] = new Card(gContext,rootScene,i,arrLoc[i],texture);
             listCards[i].showCard();
         }
 

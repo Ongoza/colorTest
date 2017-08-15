@@ -18,25 +18,27 @@ class Card extends GVRSceneObject{
     boolean selected;
     private GVRContext gContext;
     private GVRSceneObject obj;
+    private  GVRSceneObject root;
 
-    Card (GVRContext gContext, int i, float[] arrLoc, GVRTexture texture) {
-        super(gContext);
+    Card (GVRContext gContext, GVRSceneObject r, int i, float[] arrLoc, GVRTexture texture) {
+        super(gContext); root =r;
         String[] arrNames = {"gray","blue","green","red","yellow","purple","brown","black" };
         this.gContext = gContext;
         String name = String.valueOf(i);
 //        this.number = i;
 //        Log.d(TAG,"2 start create card "+name);
         obj = new GVRSceneObject(gContext, 1, 1, texture);
-        obj.setName(name); String[] tag = {"cMenu", arrNames[i]}; obj.setTag(tag);
+        obj.setName(name); String[] tag = {"cMenu", arrNames[i],"true"}; obj.setTag(tag);
         obj.getRenderData().getMaterial().setOpacity(0);
         obj.getTransform().setPosition(arrLoc[0], arrLoc[1], -5);
-        gContext.getMainScene().addSceneObject(obj);
+        root.addChildObject(obj);
+//        gContext.getMainScene().addSceneObject(obj);
     }
 
     void showCard(){
         Log.d(TAG,"start show card "+obj.getName());
         selected = false;
-        obj.attachComponent(new GVRSphereCollider(gContext));
+        obj.attachCollider(new GVRSphereCollider(gContext));
         if (obj.getRenderData() != null && obj.getRenderData().getMaterial() != null) {
 //                Log.d(TAG, "obj start anim Id =" + name );
             new GVROpacityAnimation(obj, 2, 1)
@@ -47,15 +49,16 @@ class Card extends GVRSceneObject{
     }
 
     void deleteCard(){
-        selected = true;
         obj.detachCollider();
+        selected = true;
 //        Log.d(TAG, "obj start anim Id =" );
         new GVROpacityAnimation(obj,1,0)
                 .setRepeatMode(GVRRepeatMode.ONCE)
                 .setRepeatCount(1)
                 .start(gContext.getAnimationEngine())
                 .setOnFinish(new GVROnFinish(){ @Override public void finished(GVRAnimation animation) {
-                    gContext.getMainScene().removeSceneObject(obj);
+                    root.removeChildObject(obj);
+//                    gContext.getMainScene().removeSceneObject(obj);
                     obj=null;
                 }});
     }

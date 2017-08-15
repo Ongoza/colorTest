@@ -8,23 +8,14 @@ allprojects {
     }
 }
 android {
-    signingConfigs {
-        config {
-            storeFile file('/home/os/colorTest/OSkuibidaKeyCT.jks')
-            storePassword 'bluher'
-            keyAlias 'key0'
-            keyPassword 'bluher'
-        }
-    }
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "com.ongoza.colortest"
         minSdkVersion 23
         targetSdkVersion 26
-        versionCode 5
-        versionName "1.05"
-        signingConfig signingConfigs.config
+        versionCode 6
+        versionName "1.06"
     }
     buildTypes {
         debug {
@@ -32,7 +23,6 @@ android {
         }
         release {
             minifyEnabled true
-            signingConfig signingConfigs.config
             resValue 'string', 'app_name', System.getProperty("appName")
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

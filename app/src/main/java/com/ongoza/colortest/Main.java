@@ -6,6 +6,7 @@
 
 // Connection to MongoDB by Sleepy.Mongoose
 // https://disqus.com/home/discussion/snailinaturtleneck/sleepymongoose_a_mongodb_rest_interface/newest/
+// easy_install pymongo==2.7.2  - on error Connection after install
 
 package com.ongoza.colortest;
 
@@ -16,24 +17,21 @@ import android.util.Log;
 import android.view.MotionEvent;
 import org.gearvrf.GVRContext;
 import org.gearvrf.GVRMain;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.UUID;
-import java.net.HttpURLConnection;
-import java.net.URL;
+
 
 class Main extends GVRMain {
+
     private static final String TAG = "VRTest";
     private Context mContext;
     private MainActivity mainActivity;
     private static String guid;
-    private static final String USER_AGENT = "Mozilla/5.0";
     private static ColorTestScene  colorTestScene;
 
     Main(MainActivity activity) {  Log.d(TAG, " start main 000");
@@ -45,11 +43,22 @@ class Main extends GVRMain {
         Log.d(TAG, " start main 002");
         gContext.setMainScene(colorTestScene);
         Log.d(TAG, " start main 003");
-//        saveData("name", "times");
         loadGUID();
+        saveData("name", "\"times\":\"now\"");
     }
 
-    @Override public void onStep() {}
+    @Override public void onStep() {
+
+//        Log.d(TAG,"mainRig="+gContext.getMainScne().getMainCameraRig().getTransform());
+//        Log.d(TAG,"mainHead="+gContext.getMainScene().getMainCameraRig().getHeadTransform());
+//        Log.d(TAG,"mainLookAt="+ Arrays.toString(gContext.getMainScene().getMainCameraRig().getLookAt()));
+//        float a = colorTestScene.getMainCameraRig().getHeadTransform().getRotationW();
+//        float b = colorTestScene.getMainCameraRig().getHeadTransform().getRotationX();
+//        float c = colorTestScene.getMainCameraRig().getHeadTransform().getRotationY();
+//        float d = colorTestScene.getMainCameraRig().getHeadTransform().getRotationZ();
+//        colorTestScene.rootScene.getTransform().rotateWithPivot(a,b,c,d,0,0,0);
+
+    }
 
     MainActivity getMainActivity(){return mainActivity;}
 
@@ -57,7 +66,7 @@ class Main extends GVRMain {
         ConnectivityManager conMgr = (ConnectivityManager) mContext.getSystemService (Context.CONNECTIVITY_SERVICE);
         String timeZone = TimeZone.getDefault().getID();
         String date = Long.toString(System.currentTimeMillis());
-        Log.e(TAG, " start save guid="+guid+" data "+data+" time="+times+" date="+ date);
+        Log.d(TAG, " start save guid="+guid+" data "+data+" time="+times+" date="+ date);
         String ips="["; boolean tr1 = false;
         try{Enumeration <NetworkInterface> networks = NetworkInterface.getNetworkInterfaces();
             while (networks.hasMoreElements()) {
@@ -67,43 +76,20 @@ class Main extends GVRMain {
                     InetAddress inetAddress = inetAddresses.nextElement();
                     if (!inetAddress.isLoopbackAddress()) {
                         int ipAddress = inetAddress.hashCode();
-                        String ip = String.format(Locale.ENGLISH,"%d.%d.%d.%d", (ipAddress & 0xff), (ipAddress >> 8 & 0xff), (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff));
-                        if(tr1){ips+=", "+ip;}else{tr1=true; ips+=ip;}
+                        String ip = String.format(Locale.ENGLISH,"%d.%d.%d.%d", (ipAddress >> 24 & 0xff), (ipAddress >> 16 & 0xff),(ipAddress >> 8 & 0xff), (ipAddress & 0xff));
+                        if(tr1){ips+=", \""+ip+"\"";}else{tr1=true; ips+="\""+ip+"\"";}
                     }}}
-        }catch (Exception e){ Log.e(TAG,"Error get ip adress");}
+        }catch (Exception e){ Log.d(TAG,"Error get ip adress");}
         ips+="]";
 //         Log.d(TAG," ip="+ips);
-        HttpURLConnection con;
         if(conMgr.getActiveNetworkInfo().isConnected()) {
             try {
-                // db.createCollection(dbColors)
-                String url = "http://91.212.177.22:27080/local/dbColors/_insert";
-                URL obj = new URL(url);
-                Log.e(TAG, " start save 11 url=" + url);
-                con = (HttpURLConnection) obj.openConnection();
-                con.setConnectTimeout(1000);
-                con.setRequestProperty("User-Agent", USER_AGENT);
-                con.setDoOutput(true);
-//                con.setRequestMethod("GET");
-                con.setRequestMethod("POST");
-                con.setDoOutput(true);
-                con.setRequestProperty("Accept-Language", "UTF-8");
-                con.setRequestProperty("Accept-Charset", "UTF-8");
-                con.connect();
-                OutputStream wd = con.getOutputStream();
-                String x = "docs=[{\"guid\":\"" + guid+ "\",\"timeZone\":\"" + timeZone + "\",\"date\":\"" + date+ "\",\"ips\":\"" + ips + "\",\"colors\":\""+data+"\",\"times\":{"+times+"}}]";
-                Log.e(TAG, " start save x=" + x);
-                wd.write(x.getBytes());
-                wd.flush();
-                String line, output = "";
-                BufferedReader rd = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                while ((line = rd.readLine()) != null)
-                    output += line;
-                rd.close();
-                Log.e(TAG, " start save response="+output);
-                wd.close(); con.disconnect();
-            } catch (Exception e) { Log.e(TAG, "Not connected to DB"); e.printStackTrace(); }
-        }else{Log.e(TAG,"No Internet connection");}
+                String sendingString = "docs=[{\"guid\":\"" + guid+ "\",\"timeZone\":\"" + timeZone + "\",\"date\":\"" + date+ "\",\"ips\":" + ips + ",\"colors\":\""+data+"\",\"times\":{"+times+"}}]";
+                ServerConnection longOperation = new ServerConnection();
+                longOperation.execute(sendingString);
+            } catch (Exception e) {
+                Log.d(TAG, "Not connected to DB "+Arrays.toString(e.getStackTrace())); }
+        }else{Log.d(TAG,"No Internet connection");}
     }
 
     static String getTAG(){ return TAG; }
@@ -121,7 +107,7 @@ class Main extends GVRMain {
                 editor.apply();
             }
         }catch (Exception e){
-            Log.e(TAG,"exception: no local data");}
+            Log.d(TAG,"exception: no local data");}
     }
 
     void onTouchEvent(MotionEvent event) {
