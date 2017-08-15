@@ -44,7 +44,7 @@ class Main extends GVRMain {
         gContext.setMainScene(colorTestScene);
         Log.d(TAG, " start main 003");
         loadGUID();
-        saveData("name", "\"times\":\"now\"");
+//        saveData("name", "\"times\":\"now\"");
     }
 
     @Override public void onStep() {
