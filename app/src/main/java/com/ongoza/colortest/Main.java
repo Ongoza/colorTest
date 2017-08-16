@@ -67,8 +67,8 @@ class Main extends GVRMain {
                 }else{
                     if(trArrow){
                         float[] y=colorTestScene.getMainCameraRig().getLookAt();
-                        Log.d(TAG,"mainRig rotate ="+y[0]);
-                        if(y[0]>0){
+//                        Log.d(TAG,"mainRig rotate ="+y[0]);
+                        if(y[0]<0){
                             colorTestScene.showArrow(false);
                         }else{colorTestScene.showArrow(true);}
                     trArrow=false;

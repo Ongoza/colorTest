@@ -57,25 +57,6 @@ class ColorTestScene extends GVRScene {
         super(gContext);
         this.gContext =gContext;
         this.main=main;
-//        Log.d(TAG, " start scene 000");
-        rootScene = new GVRSceneObject(gContext);
-        addSceneObject(rootScene);
-        showCover();
-//        createCameraRig();
-        createArrays();
-//        Log.d(TAG, "start color scene");
-    }
-
-    private void createCameraRig(){
-
-        GVRMaterial materialArrow = new GVRMaterial(gContext);
-        materialArrow.setMainTexture(gContext.loadFutureTexture(new GVRAndroidResource(gContext, R.drawable.arrow)));
-        headArrow = new GVRSceneObject(gContext, gContext.createQuad(1f, 1f));
-        headArrow.getRenderData().setMaterial(materialArrow);
-        headArrow.getTransform().setPositionZ(-5.0f);
-        headArrow.setEnable(false);
-        getMainCameraRig().addChildObject(headArrow);
-
         GVRMaterial material = new GVRMaterial(gContext);
         material.setMainTexture(gContext.loadFutureTexture(new GVRAndroidResource(gContext, R.drawable.headtrackingpointer)));
         GVRSceneObject headTracker = new GVRSceneObject(gContext, gContext.createQuad(0.1f, 0.1f));
@@ -85,7 +66,27 @@ class ColorTestScene extends GVRScene {
         headTracker.getRenderData().setDepthTest(false);
         headTracker.getRenderData().setRenderingOrder(100000);
         getMainCameraRig().addChildObject(headTracker);
+
+        GVRMaterial materialArrow = new GVRMaterial(gContext);
+        materialArrow.setMainTexture(gContext.loadFutureTexture(new GVRAndroidResource(gContext, R.drawable.arrow)));
+        headArrow = new GVRSceneObject(gContext, gContext.createQuad(1f, 1f));
+        headArrow.getRenderData().setMaterial(materialArrow);
+        headArrow.getTransform().setPositionZ(-5.0f);
+        headArrow.setEnable(false);
+        getMainCameraRig().addChildObject(headArrow);
+
         mPickHandler = new PickHandler();
+//        Log.d(TAG, " start scene 000");
+        rootScene = new GVRSceneObject(gContext);
+        addSceneObject(rootScene);
+        showCover();
+//        createCameraRig();
+        createArrays();
+//        Log.d(TAG, "start color scene");
+    }
+
+    private void startApp(){
+
         getEventReceiver().addListener(mPickHandler);
         mPicker = new GVRPicker(gContext, this);
         show();
@@ -93,9 +94,9 @@ class ColorTestScene extends GVRScene {
     }
 
     void showArrow(boolean plus){
-        Log.d(TAG, "show arrow "+plus);
+//        Log.d(TAG, "show arrow "+plus);
         if(plus){
-            Log.d(TAG, "show arrow 00");
+//            Log.d(TAG, "show arrow 00");
             headArrow.getTransform().setRotationByAxis(0,0,0,1);
         }else{
             headArrow.getTransform().setRotationByAxis(180,0,0,1);
@@ -113,7 +114,7 @@ class ColorTestScene extends GVRScene {
         materialCover.setMainTexture(gContext.loadFutureTexture(new GVRAndroidResource(gContext, R.drawable.cover)));
         cameraCover = new GVRSceneObject(gContext, gContext.createQuad(15f, 15f));
         cameraCover.getRenderData().setMaterial(materialCover);
-        cameraCover.getTransform().setPositionZ(-5);
+        cameraCover.getTransform().setPositionZ(-6);
         getMainCameraRig().addChildObject(cameraCover);
 
         GVRAnimation an= new GVROpacityAnimation(cameraCover,2,0)
@@ -123,7 +124,7 @@ class ColorTestScene extends GVRScene {
             an.setOnFinish(new GVROnFinish(){ @Override public void finished(GVRAnimation animation){
                 cameraCover.setEnable(false);
                 getMainCameraRig().removeChildObject(cameraCover);
-                createCameraRig();
+                startApp();
             }});
         getMainCameraRig().getLeftCamera().setBackgroundColor(1.0f, 1.0f, 1.0f, 1.0f);
         getMainCameraRig().getRightCamera().setBackgroundColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -206,16 +207,16 @@ class ColorTestScene extends GVRScene {
     private void showAbout(){
         rootAbout = new GVRSceneObject(gContext);
 //        Log.d(TAG,"show about info");
-        String[] str = new String[6];
+        String[] str = new String[8];
         str[0]="This application was developed by";
         str[1]="O.Skuibida & A.Sukhnin";
         str[2]="for the www.ongoza.com ";
-        str[3]="";
         str[4]="More information about you";
         str[5]="on the www.my-medium.com/en";
-        GVRTexture texture = createTextTexture(str,24,400,180,-1);
-        GVRSceneObject item = new GVRSceneObject(gContext, 4, 2f,texture);
-        item.getTransform().setPosition(0, 0, -4f);
+        str[7]="Version 1.1";
+        GVRTexture texture = createTextTexture(str,24,400,220,-1);
+        GVRSceneObject item = new GVRSceneObject(gContext, 4, 3,texture);
+        item.getTransform().setPosition(0, 0.5f, -4f);
         rootAbout.addChildObject(item);
 
         GVRSceneObject itemOk = createButton("Ok", 1.1f, 0.5f);
@@ -238,7 +239,7 @@ class ColorTestScene extends GVRScene {
     private void showResult() {
 //        Log.d(TAG,"start show results");
         rootResult = new GVRSceneObject(gContext);
-        String[] str = new String[1];
+        String[] str = new String[2];
         str[0]="Your results:";
         GVRTexture texture = createTextTexture(str,30,400,50,-1);
         GVRSceneObject item = new GVRSceneObject(gContext, 5, 0.7f,texture);
@@ -362,7 +363,7 @@ class ColorTestScene extends GVRScene {
         timerList.put("start",System.currentTimeMillis());
         timerList.put("startSelect",System.currentTimeMillis());
         for(int i=0;i<8;i++) {selNames[i] = -1;} selNamesCounter=0;
-        String[] str = new String[2];
+        String[] str = new String[3];
         str[0]="Please select";
         str[1]="the more pleasure color one by one.";
         showMsg2(str,true,6.5f,0.8f);
@@ -384,10 +385,12 @@ class ColorTestScene extends GVRScene {
         paint.setStrokeWidth(1F);
         paint.setTextSize(fontSize);
         for(int i=0;i<str.length;i++){
+            if(str[i]!=null){
             paint.getTextBounds(str[i], 0, str[i].length(), r);
             float x = width/2f - r.width() / 2f - r.left;
+            if(i==str.length-1){paint.setTextSize(10); x=30;}
             c.drawText(str[i],x,35+25*i,paint);
-        }
+        }}
         if (fillColor>0){ c.drawColor(fillColor);}
         return new GVRBitmapTexture(gContext,bitmapAlpha);
     }
