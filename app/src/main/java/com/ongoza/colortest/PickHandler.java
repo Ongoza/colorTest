@@ -26,10 +26,13 @@ class PickHandler implements IPickEvents {
 
                 PickedObject.getTransform().setScale(1f,1f,1f);
                 PickedObject = null;
-        }else{Log.d(TAG, "no Pick no name timer="+timer);timer=0;}
+        }else{
+//            Log.d(TAG, "no Pick no name timer="+timer);
+            timer=0;}
     }
 
     public void onPick(GVRPicker picker) {
+//        Log.d(TAG,"pick="+picker.getPicked()[0].getHitObject());
         if(picker.getPicked().length>0){
             GVRSceneObject sceneObj = picker.getPicked()[0].getHitObject();
             if(sceneObj!=PickedObject){
@@ -47,7 +50,8 @@ class PickHandler implements IPickEvents {
                 timer = System.currentTimeMillis();
                 sceneObj.getTransform().setScale(1.2f,1.2f,1.2f);
                 PickedObject = sceneObj;
-            }else { Log.d(TAG,"Already picked ");}
+//            }else { Log.d(TAG,"Already picked ");
+            }
         }
     }
 

@@ -44,6 +44,8 @@ class ColorTestScene extends GVRScene {
     private GVRSceneObject rootResult;
     private GVRSceneObject rootScene;
     private GVRSceneObject rootAbout;
+    private GVRSceneObject cameraCover;
+    private GVRSceneObject headArrow;
     private Card[] listCards = new Card[8];
     private GVRSceneObject curSelection = null;
     private GVRSceneObject curTextMsg  = null;
@@ -55,14 +57,34 @@ class ColorTestScene extends GVRScene {
         super(gContext);
         this.gContext =gContext;
         this.main=main;
-        Log.d(TAG, " start scene 000");
-        getMainCameraRig().getLeftCamera().setBackgroundColor(1.0f, 1.0f, 1.0f, 1.0f);
-        getMainCameraRig().getRightCamera().setBackgroundColor(1.0f, 1.0f, 1.0f, 1.0f);
+//        Log.d(TAG, " start scene 000");
+        rootScene = new GVRSceneObject(gContext);
+        addSceneObject(rootScene);
+        showCover();
+//        createCameraRig();
+        createArrays();
+//        Log.d(TAG, "start color scene");
+    }
+
+    private void createCameraRig(){
+
+        GVRMaterial materialArrow = new GVRMaterial(gContext);
+        materialArrow.setMainTexture(gContext.loadFutureTexture(new GVRAndroidResource(gContext, R.drawable.arrow)));
+        headArrow = new GVRSceneObject(gContext, gContext.createQuad(1f, 1f));
+        headArrow.getRenderData().setMaterial(materialArrow);
+
+        headArrow.getTransform().setPositionZ(-5.0f);
+        headArrow.getRenderData().setDepthTest(false);
+        headArrow.getRenderData().getMaterial().setOpacity(0.5f);
+        headArrow.getRenderData().setRenderingOrder(100000);
+        headArrow.setEnable(false);
+        getMainCameraRig().addChildObject(headArrow);
+
         GVRMaterial material = new GVRMaterial(gContext);
         material.setMainTexture(gContext.loadFutureTexture(new GVRAndroidResource(gContext, R.drawable.headtrackingpointer)));
         GVRSceneObject headTracker = new GVRSceneObject(gContext, gContext.createQuad(0.1f, 0.1f));
         headTracker.getRenderData().setMaterial(material);
-        headTracker.getTransform().setPosition(0.0f, 0.0f, -2.0f);
+        headTracker.getTransform().setPositionZ(-2.0f);
         headTracker.setName("Head");
         headTracker.getRenderData().setDepthTest(false);
         headTracker.getRenderData().setRenderingOrder(100000);
@@ -70,15 +92,50 @@ class ColorTestScene extends GVRScene {
         mPickHandler = new PickHandler();
         getEventReceiver().addListener(mPickHandler);
         mPicker = new GVRPicker(gContext, this);
-        Log.d(TAG, " start scene 003");
-        rootScene = new GVRSceneObject(gContext);
-        addSceneObject(rootScene);
-        createArrays();
-        Log.d(TAG, "start color scene");
+
         show();
-//        resultsLevels[0]= 70;
-//        resultsLevels[1]= 30;
-//        showResult();
+        main.trStep=true;
+        showArrow(true);
+    }
+
+    void showArrow(boolean plus){
+//        Log.d(TAG, "show arrow "+plus);
+        if(plus){
+            headArrow.getTransform().setRotationByAxis(0,0,0,0);
+        }else{
+            headArrow.getTransform().setRotationByAxis(180,0,0,1);
+        }
+        headArrow.setEnable(true);
+    }
+
+    void hideArrow(){
+        headArrow.setEnable(false);
+    }
+
+    private void showCover(){
+//        Log.d(TAG, " start cover 000");
+        GVRMaterial materialCover = new GVRMaterial(gContext);
+        materialCover.setMainTexture(gContext.loadFutureTexture(new GVRAndroidResource(gContext, R.drawable.cover)));
+//        Log.d(TAG, " start cover 001");
+        cameraCover = new GVRSceneObject(gContext, gContext.createQuad(10f, 10f));
+        cameraCover.getRenderData().setMaterial(materialCover);
+//        Log.d(TAG, " start cover 002");
+        cameraCover.getTransform().setPositionZ(-5);
+        cameraCover.setName("cameraCover");
+        cameraCover.getRenderData().setDepthTest(false);
+        cameraCover.getRenderData().setRenderingOrder(100000);
+//        Log.d(TAG, " start cover 003");
+        getMainCameraRig().addChildObject(cameraCover);
+        GVRAnimation an= new GVROpacityAnimation(cameraCover,2,0)
+                .setRepeatMode(GVRRepeatMode.ONCE)
+                .setRepeatCount(1)
+                .start(gContext.getAnimationEngine());
+            an.setOnFinish(new GVROnFinish(){ @Override public void finished(GVRAnimation animation){
+                getMainCameraRig().removeChildObject(cameraCover);
+                createCameraRig();
+            }});
+        getMainCameraRig().getLeftCamera().setBackgroundColor(1.0f, 1.0f, 1.0f, 1.0f);
+        getMainCameraRig().getRightCamera().setBackgroundColor(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
     private void createArrays(){
@@ -101,7 +158,7 @@ class ColorTestScene extends GVRScene {
     }
 
     void onTouchEvent() {
-        Log.d(TAG, "Touch event.");
+//        Log.d(TAG, "scene Touch event.");
         if (mPickHandler.PickedObject!=null){
 //            Log.d(TAG, "Touch name="+mPickHandler.PickedObject.getName());
             String[] tag =(String[]) mPickHandler.PickedObject.getTag();
@@ -199,15 +256,15 @@ class ColorTestScene extends GVRScene {
         showPie(rootResult,0);
 
         GVRSceneObject itemAbout = createButton("About", 1.3f, 0.5f);
-        itemAbout.getTransform().setPosition(-1.7f, -1.7f, -5f);
+        itemAbout.getTransform().setPosition(-1.4f, -1.7f, -5f);
         rootResult.addChildObject(itemAbout);
 
-        GVRSceneObject itemExit = createButton("Exit", 1.3f, 0.5f);
-        itemExit.getTransform().setPosition(0f, -1.7f, -5f);
-        rootResult.addChildObject(itemExit);
+//        GVRSceneObject itemExit = createButton("Exit", 1.3f, 0.5f);
+//        itemExit.getTransform().setPosition(0f, -1.7f, -5f);
+//        rootResult.addChildObject(itemExit);
 
         GVRSceneObject itemRestart = createButton("Restart", 1.3f, 0.5f);
-        itemRestart.getTransform().setPosition(1.7f, -1.7f, -5f);
+        itemRestart.getTransform().setPosition(1.4f, -1.7f, -5f);
         rootResult.addChildObject(itemRestart);
 
         // add root obj
@@ -276,7 +333,7 @@ class ColorTestScene extends GVRScene {
                 .setRepeatCount(1)
                 .start(gContext.getAnimationEngine())
                 .setOnFinish(new GVROnFinish(){ @Override public void finished(GVRAnimation animation){
-                    Log.d(TAG,"delete task Message");
+//                    Log.d(TAG,"delete task Message");
                     if(curTextMsg != null) {
                         rootScene.removeChildObject(curTextMsg);
 //                        gContext.getMainScene().removeSceneObject(curTextMsg);
@@ -314,13 +371,6 @@ class ColorTestScene extends GVRScene {
         timerList.put("start",System.currentTimeMillis());
         timerList.put("startSelect",System.currentTimeMillis());
         for(int i=0;i<8;i++) {selNames[i] = -1;} selNamesCounter=0;
-
-        for (GVRSceneObject object : getWholeSceneObjects()) {
-            if (object.getRenderData() != null && object.getRenderData().getMaterial() != null) {
-                new GVROpacityAnimation(object, 1f, 1f).start(getGVRContext().getAnimationEngine());
-            }
-        }
-//        Log.d(TAG,"atrta show");
         String[] str = new String[2];
         str[0]="Please select";
         str[1]="the more pleasure color one by one.";
@@ -440,15 +490,6 @@ class ColorTestScene extends GVRScene {
         item2.getTransform().setPosition(1.3f, yPos, -5f);
         root.addChildObject(item2);
     }
-
-//    public void hide() {
-//        for (GVRSceneObject object : getWholeSceneObjects()) {
-//            if (object.getRenderData() != null && object.getRenderData().getMaterial() != null) {
-//                object.getRenderData().getMaterial().setOpacity(0f);
-//            }
-//        }
-//        timerList.clear();
-//    }
 
     private void startSelect(){
         if(curSelection!=null){

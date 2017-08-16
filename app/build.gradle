@@ -12,10 +12,10 @@ android {
     buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "com.ongoza.colortest"
-        minSdkVersion 23
-        targetSdkVersion 26
-        versionCode 6
-        versionName "1.06"
+        minSdkVersion 21
+        targetSdkVersion 21
+        versionCode 7
+        versionName "1.07"
     }
     buildTypes {
         debug {
@@ -34,6 +34,7 @@ android {
                     System.getProperty("appName") + ".apk")
         }
     }
+
     packagingOptions {
         exclude 'lib/x86/libgvrbase.so'
         exclude 'lib/arm64-v8a/libgvrbase.so'
@@ -46,6 +47,7 @@ android {
 }
 
 dependencies {
+
     compile 'org.gearvrf:framework:3.1.1'
     compile 'org.gearvrf:backend_oculus:3.1.0'
     compile 'com.google.vr:sdk-base:1.60.0'

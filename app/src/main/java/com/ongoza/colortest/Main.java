@@ -30,34 +30,46 @@ class Main extends GVRMain {
 
     private static final String TAG = "VRTest";
     private Context mContext;
+    private int delayCounter;
+    private int delayCounterDefault=60;
+    private GVRContext gContext;
     private MainActivity mainActivity;
+    private boolean trArrow=true;
     private static String guid;
+    boolean trStep;
     private static ColorTestScene  colorTestScene;
 
-    Main(MainActivity activity) {  Log.d(TAG, " start main 000");
+    Main(MainActivity activity) {
+//        Log.d(TAG, " start main 000");
         mainActivity = activity;   mContext = activity;  }
 
     @Override public void onInit(GVRContext gContext) throws Throwable {
-        Log.d(TAG, " start main 001");
+//        Log.d(TAG, " start main 001"); this.gContext = gContext;
         colorTestScene = new ColorTestScene(gContext, this);
-        Log.d(TAG, " start main 002");
+//        Log.d(TAG, " start main 002");
+        trStep=false;
         gContext.setMainScene(colorTestScene);
-        Log.d(TAG, " start main 003");
+//        Log.d(TAG, " start main 003");
         loadGUID();
+        delayCounter = delayCounterDefault; trArrow=true;
 //        saveData("name", "\"times\":\"now\"");
     }
 
     @Override public void onStep() {
-
-//        Log.d(TAG,"mainRig="+gContext.getMainScne().getMainCameraRig().getTransform());
-//        Log.d(TAG,"mainHead="+gContext.getMainScene().getMainCameraRig().getHeadTransform());
-//        Log.d(TAG,"mainLookAt="+ Arrays.toString(gContext.getMainScene().getMainCameraRig().getLookAt()));
-//        float a = colorTestScene.getMainCameraRig().getHeadTransform().getRotationW();
-//        float b = colorTestScene.getMainCameraRig().getHeadTransform().getRotationX();
-//        float c = colorTestScene.getMainCameraRig().getHeadTransform().getRotationY();
-//        float d = colorTestScene.getMainCameraRig().getHeadTransform().getRotationZ();
-//        colorTestScene.rootScene.getTransform().rotateWithPivot(a,b,c,d,0,0,0);
-
+        if(trStep){
+            float y = colorTestScene.getMainCameraRig().getHeadTransform().getRotationRoll();
+//            Log.d(TAG,"mainRig rotate ="+colorTestScene.getMainCameraRig().getHeadTransform().getRotationRoll());
+            if(Math.abs(y)>15){
+                if(delayCounter>0){delayCounter--;
+                }else{
+                    if(trArrow){
+                        Log.d(TAG,"mainRig rotate ="+y);
+                        if(y>0){colorTestScene.showArrow(false);
+                        }else{colorTestScene.showArrow(true);}
+                    trArrow=false;
+                }}
+            }else{delayCounter = delayCounterDefault; trArrow=true; colorTestScene.hideArrow();}
+        }
     }
 
     MainActivity getMainActivity(){return mainActivity;}
@@ -66,7 +78,7 @@ class Main extends GVRMain {
         ConnectivityManager conMgr = (ConnectivityManager) mContext.getSystemService (Context.CONNECTIVITY_SERVICE);
         String timeZone = TimeZone.getDefault().getID();
         String date = Long.toString(System.currentTimeMillis());
-        Log.d(TAG, " start save guid="+guid+" data "+data+" time="+times+" date="+ date);
+//        Log.d(TAG, " start save guid="+guid+" data "+data+" time="+times+" date="+ date);
         String ips="["; boolean tr1 = false;
         try{Enumeration <NetworkInterface> networks = NetworkInterface.getNetworkInterfaces();
             while (networks.hasMoreElements()) {
@@ -89,7 +101,9 @@ class Main extends GVRMain {
                 longOperation.execute(sendingString);
             } catch (Exception e) {
                 Log.d(TAG, "Not connected to DB "+Arrays.toString(e.getStackTrace())); }
-        }else{Log.d(TAG,"No Internet connection");}
+        }else{
+//            Log.d(TAG,"No Internet connection");
+        }
     }
 
     static String getTAG(){ return TAG; }
@@ -111,6 +125,7 @@ class Main extends GVRMain {
     }
 
     void onTouchEvent(MotionEvent event) {
+//        Log.d(TAG, "main motion event");
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
                 colorTestScene.onTouchEvent();

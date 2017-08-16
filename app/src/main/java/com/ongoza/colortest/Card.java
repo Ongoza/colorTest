@@ -36,7 +36,7 @@ class Card extends GVRSceneObject{
     }
 
     void showCard(){
-        Log.d(TAG,"start show card "+obj.getName());
+//        Log.d(TAG,"start show card "+obj.getName());
         selected = false;
         obj.attachCollider(new GVRSphereCollider(gContext));
         if (obj.getRenderData() != null && obj.getRenderData().getMaterial() != null) {
