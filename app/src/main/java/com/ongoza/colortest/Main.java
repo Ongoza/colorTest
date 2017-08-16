@@ -31,8 +31,10 @@ class Main extends GVRMain {
     private static final String TAG = "VRTest";
     private Context mContext;
     private int delayCounter;
-    private int delayCounterDefault=60;
-    private GVRContext gContext;
+    private int delayCounterDefault=3;
+    private int delayCounterMulty;
+    private int delayCounterMultyDefault=15;
+//    private GVRContext gContext;
     private MainActivity mainActivity;
     private boolean trArrow=true;
     private static String guid;
@@ -51,25 +53,28 @@ class Main extends GVRMain {
         gContext.setMainScene(colorTestScene);
 //        Log.d(TAG, " start main 003");
         loadGUID();
-        delayCounter = delayCounterDefault; trArrow=true;
+        delayCounter = delayCounterDefault; trArrow=true; delayCounterMulty=delayCounterMultyDefault;
 //        saveData("name", "\"times\":\"now\"");
     }
 
     @Override public void onStep() {
         if(trStep){
-            float y = colorTestScene.getMainCameraRig().getHeadTransform().getRotationRoll();
-//            Log.d(TAG,"mainRig rotate ="+colorTestScene.getMainCameraRig().getHeadTransform().getRotationRoll());
-            if(Math.abs(y)>15){
+            if(delayCounterMulty<0){ delayCounterMulty = delayCounterMultyDefault;
+//            float y = colorTestScene.getMainCameraRig().getHeadTransform().getRotationW();
+//            Log.d(TAG,"mainRig rotate ="+colorTestScene.getMainCameraRig().getHeadTransform());
+            if(Math.abs(colorTestScene.getMainCameraRig().getHeadTransform().getRotationW())<0.8f){
                 if(delayCounter>0){delayCounter--;
                 }else{
                     if(trArrow){
-                        Log.d(TAG,"mainRig rotate ="+y);
-                        if(y>0){colorTestScene.showArrow(false);
+                        float[] y=colorTestScene.getMainCameraRig().getLookAt();
+                        Log.d(TAG,"mainRig rotate ="+y[0]);
+                        if(y[0]>0){
+                            colorTestScene.showArrow(false);
                         }else{colorTestScene.showArrow(true);}
                     trArrow=false;
                 }}
             }else{delayCounter = delayCounterDefault; trArrow=true; colorTestScene.hideArrow();}
-        }
+        }else{delayCounterMulty--;}}
     }
 
     MainActivity getMainActivity(){return mainActivity;}
@@ -101,8 +106,7 @@ class Main extends GVRMain {
                 longOperation.execute(sendingString);
             } catch (Exception e) {
                 Log.d(TAG, "Not connected to DB "+Arrays.toString(e.getStackTrace())); }
-        }else{
-//            Log.d(TAG,"No Internet connection");
+//        }else{ Log.d(TAG,"No Internet connection");
         }
     }
 

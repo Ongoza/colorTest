@@ -72,11 +72,7 @@ class ColorTestScene extends GVRScene {
         materialArrow.setMainTexture(gContext.loadFutureTexture(new GVRAndroidResource(gContext, R.drawable.arrow)));
         headArrow = new GVRSceneObject(gContext, gContext.createQuad(1f, 1f));
         headArrow.getRenderData().setMaterial(materialArrow);
-
         headArrow.getTransform().setPositionZ(-5.0f);
-        headArrow.getRenderData().setDepthTest(false);
-        headArrow.getRenderData().getMaterial().setOpacity(0.5f);
-        headArrow.getRenderData().setRenderingOrder(100000);
         headArrow.setEnable(false);
         getMainCameraRig().addChildObject(headArrow);
 
@@ -92,16 +88,15 @@ class ColorTestScene extends GVRScene {
         mPickHandler = new PickHandler();
         getEventReceiver().addListener(mPickHandler);
         mPicker = new GVRPicker(gContext, this);
-
         show();
         main.trStep=true;
-        showArrow(true);
     }
 
     void showArrow(boolean plus){
-//        Log.d(TAG, "show arrow "+plus);
+        Log.d(TAG, "show arrow "+plus);
         if(plus){
-            headArrow.getTransform().setRotationByAxis(0,0,0,0);
+            Log.d(TAG, "show arrow 00");
+            headArrow.getTransform().setRotationByAxis(0,0,0,1);
         }else{
             headArrow.getTransform().setRotationByAxis(180,0,0,1);
         }
@@ -116,21 +111,17 @@ class ColorTestScene extends GVRScene {
 //        Log.d(TAG, " start cover 000");
         GVRMaterial materialCover = new GVRMaterial(gContext);
         materialCover.setMainTexture(gContext.loadFutureTexture(new GVRAndroidResource(gContext, R.drawable.cover)));
-//        Log.d(TAG, " start cover 001");
-        cameraCover = new GVRSceneObject(gContext, gContext.createQuad(10f, 10f));
+        cameraCover = new GVRSceneObject(gContext, gContext.createQuad(15f, 15f));
         cameraCover.getRenderData().setMaterial(materialCover);
-//        Log.d(TAG, " start cover 002");
         cameraCover.getTransform().setPositionZ(-5);
-        cameraCover.setName("cameraCover");
-        cameraCover.getRenderData().setDepthTest(false);
-        cameraCover.getRenderData().setRenderingOrder(100000);
-//        Log.d(TAG, " start cover 003");
         getMainCameraRig().addChildObject(cameraCover);
+
         GVRAnimation an= new GVROpacityAnimation(cameraCover,2,0)
                 .setRepeatMode(GVRRepeatMode.ONCE)
                 .setRepeatCount(1)
                 .start(gContext.getAnimationEngine());
             an.setOnFinish(new GVROnFinish(){ @Override public void finished(GVRAnimation animation){
+                cameraCover.setEnable(false);
                 getMainCameraRig().removeChildObject(cameraCover);
                 createCameraRig();
             }});

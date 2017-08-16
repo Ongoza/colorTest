@@ -20,9 +20,9 @@ class ServerConnection extends AsyncTask<String, Void, Void> {
     protected Void doInBackground(String... data) {
 //        Log.d(TAG,"conData="+ Arrays.toString(data));
         try {
-            pingServer();
+//            pingServer();
               String sendingString = data[0];
-              Log.d(TAG, " start save sendingString=" + sendingString);
+//              Log.d(TAG, " start save sendingString=" + sendingString);
                     // db.createCollection(dbColors)
                     URL url = new URL("http://"+ip+":27080/local/dbColors/_insert");
                     HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -41,7 +41,9 @@ class ServerConnection extends AsyncTask<String, Void, Void> {
                     try {
                         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
                         while ((line = in.readLine()) != null){ output += line;}
-                    } finally {  con.disconnect(); Log.d(TAG, " start save response="+output);}
+                    } finally {  con.disconnect();
+//                        Log.d(TAG, " start save response="+output);
+                    }
 //                    Log.d(TAG, " start save 2 response="+output);
                 }catch(Exception e) {
 //            Log.d(TAG, "Not connected to DB "+Arrays.toString(e.getStackTrace()));
@@ -64,8 +66,12 @@ class ServerConnection extends AsyncTask<String, Void, Void> {
         try{
             Process  mIpAddrProcess = runtime.exec("/system/bin/ping -c 1 "+ip);
             int mExitValue = mIpAddrProcess.waitFor();
-            if(mExitValue==0){ Log.d(TAG," ping Ok"); return true;
-            }else{Log.d(TAG," ping not Ok"); return false; }
+            if(mExitValue==0){
+//                Log.d(TAG," ping Ok");
+                return true;
+            }else{
+//                Log.d(TAG," ping not Ok");
+                return false; }
         }catch (InterruptedException ignore){ Log.d(TAG,"Ignore Exception:");
         }catch (IOException e){ Log.d(TAG," Exception:"+e);}
         return false;
