@@ -2,14 +2,14 @@ package com.ongoza.colortest;
 
 import android.os.Bundle;
 //import android.util.Log;
-import android.view.KeyEvent;
+//import android.view.KeyEvent;
 import android.view.MotionEvent;
 import org.gearvrf.GVRActivity;
 
 public class MainActivity extends GVRActivity {
-    private static final int BUTTON_INTERVAL = 500;
-//    private static final int TAP_INTERVAL = 300;
-    private long mLatestButton = 0;
+//    private static final int BUTTON_INTERVAL = 500;
+////    private static final int TAP_INTERVAL = 300;
+//    private long mLatestButton = 0;
 //    private long mLatestTap = 0;
 //    private static final String TAG = "VRTest";
     Main main;
@@ -31,18 +31,18 @@ public class MainActivity extends GVRActivity {
         return super.onTouchEvent(event);
     }
 
-    @Override public void onBackPressed() {
-        if (System.currentTimeMillis() > mLatestButton + BUTTON_INTERVAL) {
-            mLatestButton = System.currentTimeMillis();
-        }
-    }
-
-    @Override public boolean onKeyLongPress(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            mLatestButton = System.currentTimeMillis();
-        }
-        return super.onKeyLongPress(keyCode, event);
-    }
+//    @Override public void onBackPressed() {
+//        if (System.currentTimeMillis() > mLatestButton + BUTTON_INTERVAL) {
+//            mLatestButton = System.currentTimeMillis();
+//        }
+//    }
+//
+//    @Override public boolean onKeyLongPress(int keyCode, KeyEvent event) {
+//        if (keyCode == KeyEvent.KEYCODE_BACK) {
+//            mLatestButton = System.currentTimeMillis();
+//        }
+//        return super.onKeyLongPress(keyCode, event);
+//    }
 
     //@Override
 //    public boolean onSingleTap(MotionEvent e) {
