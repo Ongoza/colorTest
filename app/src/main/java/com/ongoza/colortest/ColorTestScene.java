@@ -207,13 +207,17 @@ class ColorTestScene extends GVRScene {
     private void showAbout(){
         rootAbout = new GVRSceneObject(gContext);
 //        Log.d(TAG,"show about info");
+        String version="";
+        try{
+            version = gContext.getContext().getString(R.string.app_version);
+        }catch (Exception e){Log.d(TAG,"can not read version from strings");}
         String[] str = new String[8];
         str[0]="This application was developed by";
         str[1]="O.Skuibida & A.Sukhnin";
         str[2]="for the www.ongoza.com ";
         str[4]="More information about you";
         str[5]="on the www.my-medium.com/en";
-        str[7]="Version 1.1";
+        str[7]="Version "+version;
         GVRTexture texture = createTextTexture(str,24,400,220,-1);
         GVRSceneObject item = new GVRSceneObject(gContext, 4, 3,texture);
         item.getTransform().setPosition(0, 0.5f, -4f);
