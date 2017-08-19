@@ -20,7 +20,7 @@ public class MainActivity extends GVRActivity {
 //        Log.d(TAG, " start activity 00");
         main = new Main(this);
 //        Log.d(TAG, " start activity 01");
-        setMain(main, "gvr.xml");
+        setMain(main);
 //        Log.d(TAG, " start activity 03");
     }
 

@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 
-def version = 14
+def version = 15
 System.setProperty("appName", "Concentration Test")
 System.setProperty("appVersion", "1."+version.toString())
 
