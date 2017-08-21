@@ -3,13 +3,14 @@ package com.ongoza.colortest;
 import android.os.Bundle;
 //import android.util.Log;
 //import android.view.KeyEvent;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import org.gearvrf.GVRActivity;
 
 public class MainActivity extends GVRActivity {
-//    private static final int BUTTON_INTERVAL = 500;
+    private static final int BUTTON_INTERVAL = 500;
 ////    private static final int TAP_INTERVAL = 300;
-//    private long mLatestButton = 0;
+    private long mLatestButton = 0;
 //    private long mLatestTap = 0;
 //    private static final String TAG = "VRTest";
     Main main;

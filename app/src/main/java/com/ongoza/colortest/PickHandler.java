@@ -3,10 +3,10 @@ package com.ongoza.colortest;
 import org.gearvrf.GVRPicker;
 import org.gearvrf.GVRSceneObject;
 import org.gearvrf.IPickEvents;
-import org.gearvrf.utility.Log;
+//import org.gearvrf.utility.Log;
 
 class PickHandler implements IPickEvents {
-    private static final String TAG = Main.getTAG();
+//    private static final String TAG = Main.getTAG();
     private long timer=0;
     GVRSceneObject PickedObject = null;
 
@@ -18,11 +18,11 @@ class PickHandler implements IPickEvents {
         if(PickedObject!=null){
             long curTime = System.currentTimeMillis();
                 if(timer>0) {
-                    ColorTestScene.addTimerRes(PickedObject.getName(), curTime - timer);
+                    ColorTestScene.addTimerPick(PickedObject.getName(), curTime - timer);
                     timer=0;
                 }else{
                     long selTime = ColorTestScene.getTimer("startSelect");
-                    ColorTestScene.addTimerRes(PickedObject.getName(), curTime - selTime);}
+                    ColorTestScene.addTimerPick(PickedObject.getName(), curTime - selTime);}
 
                 PickedObject.getTransform().setScale(1f,1f,1f);
                 PickedObject = null;
@@ -40,11 +40,10 @@ class PickHandler implements IPickEvents {
                     String name = PickedObject.getName();
                     long curTime = System.currentTimeMillis();
 //                    Log.d(TAG, "Pick no Pick name ="+name);
-                    if(timer>0) {
-                        ColorTestScene.addTimerRes(name, curTime - timer);
+                    if(timer>0) {  ColorTestScene.addTimerPick(name, curTime - timer);
                     }else{
                         long selTime = ColorTestScene.getTimer("startSelect");
-                        ColorTestScene.addTimerRes(name, curTime - selTime);}
+                        ColorTestScene.addTimerPick(name, curTime - selTime);}
                     PickedObject.getTransform().setScale(1f,1f,1f);
                     PickedObject = null;}
                 timer = System.currentTimeMillis();

@@ -19,7 +19,6 @@ import org.gearvrf.GVRContext;
 import org.gearvrf.GVRMain;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -79,13 +78,14 @@ class Main extends GVRMain {
 
     MainActivity getMainActivity(){return mainActivity;}
 
-    void saveData(String data, String times){
+    void saveData(String data, String times, String pickes, String total){
         ConnectivityManager conMgr = (ConnectivityManager) mContext.getSystemService (Context.CONNECTIVITY_SERVICE);
         String timeZone = TimeZone.getDefault().getID();
         String date = Long.toString(System.currentTimeMillis());
 //        Log.d(TAG, " start save guid="+guid+" data "+data+" time="+times+" date="+ date);
         String ips="["; boolean tr1 = false;
-        try{Enumeration <NetworkInterface> networks = NetworkInterface.getNetworkInterfaces();
+        try{
+            Enumeration <NetworkInterface> networks = NetworkInterface.getNetworkInterfaces();
             while (networks.hasMoreElements()) {
                 NetworkInterface net = networks.nextElement();
                 Enumeration<InetAddress> inetAddresses = net.getInetAddresses();
@@ -98,15 +98,26 @@ class Main extends GVRMain {
                     }}}
         }catch (Exception e){ Log.d(TAG,"Error get ip adress");}
         ips+="]";
-//         Log.d(TAG," ip="+ips);
-        if(conMgr.getActiveNetworkInfo().isConnected()) {
-            try {
-                String sendingString = "docs=[{\"guid\":\"" + guid+ "\",\"timeZone\":\"" + timeZone + "\",\"date\":\"" + date+ "\",\"ips\":" + ips + ",\"colors\":\""+data+"\",\"times\":{"+times+"}}]";
+        if(conMgr.getActiveNetworkInfo() != null){
+            if(conMgr.getActiveNetworkInfo().isConnected()) {
+                String sendingString = "docs=[{\"guid\":\""+guid
+                        +"\",\"timeZone\":\""+timeZone
+                        +"\",\"date\":\""+date
+                        +"\",\"ips\":"+ips
+                        +",\"colors\":\""+data
+                        +"\",\"times\":{"+times+"}"
+                        +",\"pickes\":{"+pickes+"}"
+                        +"',\"total\":"+total
+                        +"}]";
+    //            Log.d(TAG," sendingString="+sendingString);
                 ServerConnection longOperation = new ServerConnection();
-                longOperation.execute(sendingString);
-            } catch (Exception e) {
-                Log.d(TAG, "Not connected to DB "+Arrays.toString(e.getStackTrace())); }
-//        }else{ Log.d(TAG,"No Internet connection");
+                try {
+                    longOperation.execute(sendingString);
+                } catch (Exception e) {
+                    Log.d(TAG, "Not connected to DB "); }
+            }
+        }else{
+            Log.d(TAG, "No Internet connection.");
         }
     }
 

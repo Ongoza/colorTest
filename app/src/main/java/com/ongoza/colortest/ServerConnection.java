@@ -2,13 +2,15 @@ package com.ongoza.colortest;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Arrays;
+
+//import java.io.BufferedReader;
+//import java.util.Arrays;
+//import java.io.InputStreamReader;
+
+
 
 class ServerConnection extends AsyncTask<String, Void, Void> {
     private static final String TAG = Main.getTAG();
@@ -28,8 +30,8 @@ class ServerConnection extends AsyncTask<String, Void, Void> {
                     HttpURLConnection con = (HttpURLConnection) url.openConnection();
                     con.setRequestMethod("POST");
                     con.setDoOutput(true);
-                    con.setReadTimeout(15000); // millis
-                    con.setConnectTimeout(20000); // millis
+                    con.setReadTimeout(600); // millis
+                    con.setConnectTimeout(1000); // millis
                     con.setRequestProperty("Accept-Language", "UTF-8");
                     con.setRequestProperty("Accept-Charset", "UTF-8");
                     con.setRequestProperty("User-Agent", USER_AGENT);
@@ -37,16 +39,13 @@ class ServerConnection extends AsyncTask<String, Void, Void> {
                     OutputStream wd = con.getOutputStream();
                     wd.write(sendingString.getBytes());
                     wd.flush();
-                    String line, output = "";
-                    try {
-                        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                        while ((line = in.readLine()) != null){ output += line;}
-                    } finally {  con.disconnect();
-//                        Log.d(TAG, " start save response="+output);
-                    }
+//                    String line; String output = "";
+//                    try { BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+//                        while ((line = in.readLine()) != null){ output += line;}
+//                    } finally {  con.disconnect(); }
 //                    Log.d(TAG, " start save 2 response="+output);
-                }catch(Exception e) {
-//            Log.d(TAG, "Not connected to DB "+Arrays.toString(e.getStackTrace()));
+                }catch(Exception e){
+//            Log.d(TAG, "Not connected to DB "+ Arrays.toString(e.getStackTrace()));
             Log.d(TAG, "Not connected to DB ");}
         return null;
     }
@@ -61,19 +60,19 @@ class ServerConnection extends AsyncTask<String, Void, Void> {
 //
 //    }
 
-    private boolean pingServer(){
-        Runtime runtime = Runtime.getRuntime();
-        try{
-            Process  mIpAddrProcess = runtime.exec("/system/bin/ping -c 1 "+ip);
-            int mExitValue = mIpAddrProcess.waitFor();
-            if(mExitValue==0){
-//                Log.d(TAG," ping Ok");
-                return true;
-            }else{
-//                Log.d(TAG," ping not Ok");
-                return false; }
-        }catch (InterruptedException ignore){ Log.d(TAG,"Ignore Exception:");
-        }catch (IOException e){ Log.d(TAG," Exception:"+e);}
-        return false;
-    }
+//    private boolean pingServer(){
+//        Runtime runtime = Runtime.getRuntime();
+//        try{
+//            Process  mIpAddrProcess = runtime.exec("/system/bin/ping -c 1 "+ip);
+//            int mExitValue = mIpAddrProcess.waitFor();
+//            if(mExitValue==0){
+////                Log.d(TAG," ping Ok");
+//                return true;
+//            }else{
+////                Log.d(TAG," ping not Ok");
+//                return false; }
+//        }catch (InterruptedException ignore){ Log.d(TAG,"Ignore Exception:");
+//        }catch (IOException e){ Log.d(TAG," Exception:"+e);}
+//        return false;
+//    }
 }

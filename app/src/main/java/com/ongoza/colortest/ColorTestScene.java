@@ -37,6 +37,7 @@ class ColorTestScene extends GVRScene {
     private Main main;
     private static Map<String,Long> timerList= new HashMap<>();
     private static ArrayList<String[]> timerListRes = new ArrayList<>();
+    private static ArrayList<String[]> timerListPick = new ArrayList<>();
     private static final String TAG = Main.getTAG();
     private float[][] arrLoc = new float[8][2];
     private int[][] arrColor = new int[8][3];
@@ -51,7 +52,8 @@ class ColorTestScene extends GVRScene {
     private GVRSceneObject curTextMsg  = null;
     private int[] resultsLevels = new int[2];
 //    private String[] arrNames = {"gray","blue","green","red","yellow","purple","brown","black" };
-    private int[] selNames = new int[8]; private int selNamesCounter;
+    private int[] selNames = new int[8];
+    private int selNamesCounter;
 
     ColorTestScene(GVRContext gContext,Main main) {
         super(gContext);
@@ -297,16 +299,25 @@ class ColorTestScene extends GVRScene {
                 }
         }
         long total = System.currentTimeMillis() - timerList.get("start");
-        String strRes = "\"Total time\": \"" + total + "ms\"";
+        String strTotal = "\"" + total + " ms\"";
+        String strRes = "";
         for (int j = 0; j < timerListRes.size(); j++) {
-//            Log.d(TAG,"result j="+j);
             try {
                 String[] strIter = timerListRes.get(j);
-//                Log.d(TAG,"name="+strIter[0]+"res="+strIter[1]);
                 long resTime = Long.parseLong(strIter[1]);
                 String res = String.valueOf(Math.round(resTime * 100 / total));
-                strRes += ",\""+strIter[0] +"\""+ ": \"" + res + "\"";
+                if(j!=0){strRes += ",";}
+                strRes += "\""+strIter[0]+"\""+":\""+res+"\"";
             } catch (Exception e) {  Log.d(TAG, "Error parse result arraylist");  }
+        }
+        String strPicks = "";
+        for (int j = 0; j < timerListPick.size(); j++) {
+            try {String[] strIter = timerListPick.get(j);
+                long resTime = Long.parseLong(strIter[1]);
+                String res = String.valueOf(resTime);
+                if(j!=0){strPicks += ",";}
+                strPicks += "\""+strIter[0] +"\""+ ": \"" + res + "\"";
+            } catch (Exception e) {  Log.d(TAG, "Error parse strPicks result arraylist");  }
         }
         float s = 0; float e = 0;
         float[] kArray= new float[] {8.1f,6.8f,6,5.3f,4.7f,4,3.2f,1.8f};
@@ -319,7 +330,7 @@ class ColorTestScene extends GVRScene {
         String data = Arrays.toString(selNames);
         resultsLevels[0]= Math.round(s*100/42);
         resultsLevels[1]= Math.round((e-9)*100/12);
-        main.saveData(data,strRes);
+        main.saveData(data,strRes,strPicks,strTotal);
 //        Log.d(TAG, "Show result" + data + " timer=" + strRes);
 //        Log.d(TAG, "Your Stress Level: s="+s+" %=" + resultsLevels[0]);
 //        Log.d(TAG, "Your Efficiency Level: e=" + e+" %="+resultsLevels[1]);
@@ -536,5 +547,12 @@ class ColorTestScene extends GVRScene {
         String[] strArr ={name, String.valueOf(time)};
         timerListRes.add(strArr);
 //        Log.d(TAG,"2 add data to res "+strArr[0]+" "+strArr[1]+" lenght="+timerListRes.size());
+    }
+
+    static void addTimerPick(String name, long time){
+//        Log.d(TAG,"1 add data to res "+name+" "+time);
+        String[] strArr ={name, String.valueOf(time)};
+        timerListPick.add(strArr);
+//        Log.d(TAG,"2 add data to res "+strArr[0]+" "+strArr[1]+" lenght="+timerListPick.size());
     }
 }
