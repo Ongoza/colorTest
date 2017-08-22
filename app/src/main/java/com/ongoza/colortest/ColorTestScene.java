@@ -540,7 +540,7 @@ class ColorTestScene extends GVRScene {
     public void showExitPromt(){
         mPickHandler.setModal(true);
         rootExit = new GVRSceneObject(gContext);
-        Log.d(TAG,"show exit ");
+//        Log.d(TAG,"show exit ");
         String[] str = new String[4];
 
         GVRTexture textureBack = createBlankTexture(100,100);

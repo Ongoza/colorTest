@@ -107,7 +107,7 @@ class Main extends GVRMain {
                         +",\"colors\":\""+data
                         +"\",\"times\":{"+times+"}"
                         +",\"pickes\":{"+pickes+"}"
-                        +"',\"total\":"+total
+                        +",\"total\":"+total
                         +"}]";
     //            Log.d(TAG," sendingString="+sendingString);
                 ServerConnection longOperation = new ServerConnection();

@@ -6,9 +6,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-//import java.io.BufferedReader;
-//import java.util.Arrays;
-//import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.util.Arrays;
+import java.io.InputStreamReader;
 
 
 
@@ -39,10 +39,10 @@ class ServerConnection extends AsyncTask<String, Void, Void> {
                     OutputStream wd = con.getOutputStream();
                     wd.write(sendingString.getBytes());
                     wd.flush();
-//                    String line; String output = "";
-//                    try { BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-//                        while ((line = in.readLine()) != null){ output += line;}
-//                    } finally {  con.disconnect(); }
+                    String line; String output = "";
+                    try { BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                        while ((line = in.readLine()) != null){ output += line;}
+                    } finally {  con.disconnect(); }
 //                    Log.d(TAG, " start save 2 response="+output);
                 }catch(Exception e){
 //            Log.d(TAG, "Not connected to DB "+ Arrays.toString(e.getStackTrace()));
