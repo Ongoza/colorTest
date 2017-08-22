@@ -3,6 +3,7 @@ package com.ongoza.colortest;
 import android.os.Bundle;
 //import android.util.Log;
 //import android.view.KeyEvent;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import org.gearvrf.GVRActivity;
@@ -12,7 +13,7 @@ public class MainActivity extends GVRActivity {
 ////    private static final int TAP_INTERVAL = 300;
     private long mLatestButton = 0;
 //    private long mLatestTap = 0;
-//    private static final String TAG = "VRTest";
+    private static final String TAG = "VRTest";
     Main main;
 
 
@@ -31,6 +32,14 @@ public class MainActivity extends GVRActivity {
         main.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
+
+
+//    @Override public void onBackPressed() {
+//        super.onPause();
+//        super.onBackPressed();
+//        main.
+//        this.finishAffinity();
+//    }
 
 //    @Override public void onBackPressed() {
 //        if (System.currentTimeMillis() > mLatestButton + BUTTON_INTERVAL) {
@@ -55,9 +64,18 @@ public class MainActivity extends GVRActivity {
 //        return false;
 //    }
 
-    void exitHome(){
-//        this.finishAffinity();
+    public void exitHome(){
+        this.finish();
+//        super.onBackPressed();
 //        System.exit(0);
+
+//        nativeShowConfirmQuit(mPtr);
+//        super.getConfigurationManager();
+//        onBackPressed();
+//        super.closeContextMenu();
+//        super.onBackPressed();
+//        Log.d(TAG,"exit");
+//        super.closeOptionsMenu();
     }
 
 

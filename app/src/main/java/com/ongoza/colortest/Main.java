@@ -139,6 +139,14 @@ class Main extends GVRMain {
             Log.d(TAG,"exception: no local data");}
     }
 
+    @Override public boolean onBackPress() {
+//        mainActivity.finish();
+        colorTestScene.showExitPromt();
+//       Log.d(TAG, "dd="+mainActivity.getConfigurationManager().isHomeKeyPresent());
+        return true;
+    }
+
+
     void onTouchEvent(MotionEvent event) {
 //        Log.d(TAG, "main motion event");
         switch (event.getAction() & MotionEvent.ACTION_MASK) {

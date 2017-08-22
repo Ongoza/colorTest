@@ -45,6 +45,7 @@ class ColorTestScene extends GVRScene {
     private GVRSceneObject rootResult;
     private GVRSceneObject rootScene;
     private GVRSceneObject rootAbout;
+    private GVRSceneObject rootExit;
     private GVRSceneObject cameraCover;
     private GVRSceneObject headArrow;
     private Card[] listCards = new Card[8];
@@ -158,11 +159,10 @@ class ColorTestScene extends GVRScene {
             String[] tag =(String[]) mPickHandler.PickedObject.getTag();
 //            Log.d(TAG, "Touch type="+tag[0]);
             String name = mPickHandler.PickedObject.getName();
+//            Log.d(TAG, "Pick about 1 "+tag[1]);
             switch (tag[0]) {
-                case "cMenu": selectColor(getSceneObjectByName(name));
-                    break;
+                case "cMenu": selectColor(getSceneObjectByName(name)); break;
                 case "mMenu":
-//                    Log.d(TAG, "Pick about 1 "+tag[1]);
                     switch(tag[1]){
                         case "Ok":
                             hideAbout();
@@ -178,11 +178,10 @@ class ColorTestScene extends GVRScene {
                             hideAbout();
                             show();
                             break;
-                        case "Exit":
-                            main.getMainActivity().exitHome();
-                            break;
+                        case "ExitOk": main.getMainActivity().exitHome(); break;
+                        case "ExitCancel": hideExit(); break;
                         default: break;
-                    } break;
+                    }; break;
                 default: break; }
     }}
 
@@ -204,7 +203,10 @@ class ColorTestScene extends GVRScene {
         }else{Log.d(TAG,"error. can not find object"+selObj.getName());}
     }
 
-    private void hideResult() { if(rootResult!=null){ rootScene.removeChildObject(rootResult); rootResult=null;}}
+    private void hideResult() {
+        if(rootResult!=null){  //Log.d(TAG,"hide result 2");
+            rootScene.removeChildObject(rootResult);
+            rootResult=null;}}
 
     private void showAbout(){
         rootAbout = new GVRSceneObject(gContext);
@@ -225,7 +227,7 @@ class ColorTestScene extends GVRScene {
         item.getTransform().setPosition(0, 0.5f, -4f);
         rootAbout.addChildObject(item);
 
-        GVRSceneObject itemOk = createButton("Ok", 1.1f, 0.5f);
+        GVRSceneObject itemOk = createButton("Ok","Ok", 1.1f, 0.5f);
         itemOk.getTransform().setPosition(0, -1.5f, -4f);
         rootAbout.addChildObject(itemOk);
         for (GVRSceneObject child : rootAbout.children()) {
@@ -253,7 +255,7 @@ class ColorTestScene extends GVRScene {
         rootResult.addChildObject(item);
         showPie(rootResult,0);
 
-        GVRSceneObject itemAbout = createButton("About", 1.3f, 0.5f);
+        GVRSceneObject itemAbout = createButton("About","About", 1.3f, 0.5f);
         itemAbout.getTransform().setPosition(-1.4f, -1.7f, -5f);
         rootResult.addChildObject(itemAbout);
 
@@ -261,7 +263,7 @@ class ColorTestScene extends GVRScene {
 //        itemExit.getTransform().setPosition(0f, -1.7f, -5f);
 //        rootResult.addChildObject(itemExit);
 
-        GVRSceneObject itemRestart = createButton("Restart", 1.3f, 0.5f);
+        GVRSceneObject itemRestart = createButton("Restart","Restart", 1.3f, 0.5f);
         itemRestart.getTransform().setPosition(1.4f, -1.7f, -5f);
         rootResult.addChildObject(itemRestart);
 
@@ -279,11 +281,11 @@ class ColorTestScene extends GVRScene {
 //        Log.d(TAG,"start show results 7");
     }
 
-    private GVRSceneObject createButton(String name, float width, float height){
+    private GVRSceneObject createButton(String name, String cmd, float width, float height){
         GVRTexture texture = createButtonTexure(name,width*100,height*100);
         GVRSceneObject item = new GVRSceneObject(gContext, width, height,texture);
         item.setName(name);
-        String[] tag = {"mMenu", name}; item.setTag(tag);
+        String[] tag = {"mMenu", cmd}; item.setTag(tag);
         item.attachComponent(new GVRSphereCollider(gContext));
         return item;
     }
@@ -384,6 +386,15 @@ class ColorTestScene extends GVRScene {
         showMsg2(str,true,6.5f,0.8f);
     }
 
+    private GVRTexture createBlankTexture(int width, int height){
+        Bitmap bitmapAlpha = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bitmapAlpha);
+        Paint paint = new Paint();
+        c.drawColor(Color.WHITE);
+        paint.setAlpha(255);
+        return new GVRBitmapTexture(gContext,bitmapAlpha);
+    }
+
     private GVRTexture createTextTexture(String[] str, int fontSize, int width, int height, int fillColor){
         Rect r = new Rect();
         Bitmap bitmapAlpha = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -391,6 +402,10 @@ class ColorTestScene extends GVRScene {
         Paint paint = new Paint();
         paint.setAntiAlias(true);
         float stroke = 4f;
+        paint.setColor(Color.WHITE);
+        paint.setStyle(Paint.Style.FILL);
+        c.drawRoundRect(stroke,stroke,width-stroke,height-stroke,20,20,paint);
+
         paint.setStrokeWidth(stroke);
         paint.setColor(Color.GRAY);
         paint.setStyle(Paint.Style.STROKE);
@@ -407,6 +422,7 @@ class ColorTestScene extends GVRScene {
             c.drawText(str[i],x,35+25*i,paint);
         }}
         if (fillColor>0){ c.drawColor(fillColor);}
+        paint.setAlpha(255);
         return new GVRBitmapTexture(gContext,bitmapAlpha);
     }
 
@@ -419,21 +435,25 @@ class ColorTestScene extends GVRScene {
         Paint paint = new Paint();
         paint.setAntiAlias(true);
         float stroke = 4f;
-        paint.setStrokeWidth(stroke);
-        paint.setColor(Color.rgb(46,191,248));
-        paint.setStyle(Paint.Style.STROKE);
-        c.drawRoundRect(stroke,stroke,width-stroke,height-stroke,20,20,paint);
-        paint.setColor(Color.argb(100,46,191,248));
+        paint.setColor(Color.argb(250,146,220,248));
         paint.setStyle(Paint.Style.FILL);
         c.drawRoundRect(stroke,stroke,width-stroke,height-stroke,20,20,paint);
-        paint.setColor(Color.BLACK);
+
+        paint.setStrokeWidth(stroke);
+        paint.setColor(Color.argb(250,36,115,200));
+        paint.setStyle(Paint.Style.STROKE);
+        c.drawRoundRect(stroke,stroke,width-stroke,height-stroke,20,20,paint);
+
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.argb(250,10,10,10));
         paint.setStrokeWidth(2F);
-        paint.setTextSize(30F);
+        paint.setTextSize(28F);
             paint.getTextBounds(str, 0, str.length(), r);
             float x = width/2f - r.width() / 2f - r.left;
             c.drawText(str,x,35,paint);
 //        c.drawColor(Color.argb(100,150,150,150));
 //        c.drawColor(Color.argb(100,46,191,248));
+        paint.setAlpha(255);
         return new GVRBitmapTexture(gContext,bitmapAlpha);
     }
 
@@ -512,8 +532,61 @@ class ColorTestScene extends GVRScene {
         }
     }
 
+    private void hideExit(){
+        mPickHandler.setModal(false);
+        if(rootExit!=null){ rootScene.removeChildObject(rootExit);  rootExit=null;}
+    }
+
+    public void showExitPromt(){
+        mPickHandler.setModal(true);
+        rootExit = new GVRSceneObject(gContext);
+        Log.d(TAG,"show exit ");
+        String[] str = new String[4];
+
+        GVRTexture textureBack = createBlankTexture(100,100);
+        GVRSceneObject itemBack = new GVRSceneObject(gContext,10f,10f, textureBack);
+        itemBack.getTransform().setPosition(0, 0, -4.2f);
+        itemBack.getRenderData().setDepthTest(false);
+        itemBack.getRenderData().setRenderingOrder(9999);
+        rootExit.addChildObject(itemBack);
+
+        str[0]="";
+        str[1]="Exit to Oculus Home?";
+        GVRTexture texture = createTextTexture(str,24,450,100,-1);
+
+        GVRSceneObject item = new GVRSceneObject(gContext,4.5f,1f, texture);
+        item.getTransform().setPosition(0, 0.5f, -4f);
+        item.getRenderData().setDepthTest(false);
+        item.getRenderData().setRenderingOrder(10000);
+        rootExit.addChildObject(item);
+
+        GVRSceneObject itemOk = createButton("Ok","ExitOk", 1.3f, 0.5f);
+        itemOk.getTransform().setPosition(-1, -0.5f, -4f);
+        itemOk.getRenderData().setDepthTest(false);
+        itemOk.getRenderData().setRenderingOrder(10000);
+        rootExit.addChildObject(itemOk);
+
+        GVRSceneObject itemCancel = createButton("Cancel","ExitCancel", 1.3f, 0.5f);
+        itemCancel.getTransform().setPosition(1, -0.5f, -4f);
+        itemCancel.getRenderData().setDepthTest(false);
+        itemCancel.getRenderData().setRenderingOrder(10000);
+        rootExit.addChildObject(itemCancel);
+
+//        for (GVRSceneObject child : rootExit.children()) {
+////            Log.d(TAG,"show exit info 6");
+//            child.getRenderData().getMaterial().setOpacity(0);
+//            new GVROpacityAnimation(child, 2, 1)
+//                    .setRepeatMode(GVRRepeatMode.ONCE)
+//                    .setRepeatCount(1)
+//                    .start(gContext.getAnimationEngine());
+//        }
+
+        rootScene.addChildObject(rootExit);
+    }
+
     private void animateDeleteMsg(){
 //        Log.d(TAG,"delete Message");
+//        showExitPromt();
         new GVRPositionAnimation(curTextMsg,1,0, 2f, -5f)
                 .setRepeatMode(GVRRepeatMode.ONCE)
                 .setRepeatCount(1)
